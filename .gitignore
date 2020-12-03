@@ -8,3 +8,4 @@ nbproject/genfiles.properties
 
 nbproject/build-impl.xml
 /nbproject/private/
+*.stackdump
