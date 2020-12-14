@@ -25,7 +25,7 @@ public class Poblacion {
     
     public Poblacion(long semilla, CargaDatos datos, boolean generar, Configurador config) {
         this.poblacion = new Vector<Hormiga>();
-        this.tamPoblacion = 0;
+        this.tamPoblacion = config.getTamPoblacion();
         this.semilla = semilla;
         this.datos = datos;
         this.config = config;
