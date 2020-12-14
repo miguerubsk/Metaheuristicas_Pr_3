@@ -31,7 +31,15 @@ public class Poblacion {
         this.config = config;
         this.aleatorio = new Random(semilla);
         if (generar) {
-//            generarPoblacion();
+            generarPoblacion();
+        }
+    }
+    
+    private void generarPoblacion() {
+        for (int i = 0; i < config.getTamPoblacion(); i++) {
+            Hormiga nuevaHormiga = new Hormiga(semilla + aleatorio.Randint(0, datos.getTamMatriz()), datos);
+            poblacion.add(nuevaHormiga);
+            tamPoblacion++;
         }
     }
     
