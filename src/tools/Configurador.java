@@ -18,12 +18,16 @@ public class Configurador {
 
     private ArrayList<String> Ficheros;
     private ArrayList<Long> Semillas;
-    private Integer Iteraciones, TamPoblacion, alfa, beta, greedy;
+    private ArrayList<Integer> alfa, beta;
+    private ArrayList<Float> greedy, feromonaInicial;
+    private Integer Iteraciones, TamPoblacion;
     private float delta, fi, p, q0;
 
     public Configurador(String ruta) {
-        Ficheros = new ArrayList<>();
-        Semillas = new ArrayList<>();
+        Ficheros = new ArrayList<String>();
+        Semillas = new ArrayList<Long>();
+        greedy = new ArrayList<Float>();
+        feromonaInicial = new ArrayList<Float>();
 
         String linea;
         FileReader f = null;
@@ -53,13 +57,23 @@ public class Configurador {
                         TamPoblacion = Integer.parseInt(split[1]);
                         break;
                     case "greedy":
-                        greedy = Integer.parseInt(split[1]);
+                        String[] vG = split[1].split(" ");
+                        for (int i = 0; i < vG.length; i++) {
+                            greedy.add(Float.parseFloat(vG[i]));
+                            feromonaInicial.add(1/(Float.parseFloat(vG[i])*TamPoblacion));
+                        }
                         break;
                     case "alfa":
-                        alfa = Integer.parseInt(split[1]);
+                        String[] vA = split[1].split(" ");
+                        for (int i = 0; i < vA.length; i++) {
+                            alfa.add(Integer.parseInt(vA[i]));
+                        }
                         break;
                     case "beta":
-                        beta = Integer.parseInt(split[1]);
+                        String[] vB = split[1].split(" ");
+                        for (int i = 0; i < vB.length; i++) {
+                            alfa.add(Integer.parseInt(vB[i]));
+                        }
                         break;
                     case "q0":
                         q0 = Float.parseFloat(split[1]);
@@ -105,24 +119,28 @@ public class Configurador {
         return fi;
     }
 
-    public Integer getAlfa() {
-        return alfa;
-    }
-
-    public Integer getBeta() {
-        return beta;
-    }
-
-    public Integer getGreedy() {
-        return greedy;
-    }
-
     public float getP() {
         return p;
     }
 
     public float getQ0() {
         return q0;
+    }
+
+    public ArrayList<Float> getGreedy() {
+        return greedy;
+    }
+
+    public ArrayList<Integer> getAlfa() {
+        return alfa;
+    }
+
+    public ArrayList<Integer> getBeta() {
+        return beta;
+    }
+
+    public ArrayList<Float> getFeromonaInicial() {
+        return feromonaInicial;
     }
 
 }
