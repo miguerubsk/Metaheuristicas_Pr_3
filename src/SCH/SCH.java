@@ -18,15 +18,27 @@ public class SCH {
     private final Configurador config; //Archivo de configuracion
     private final Long semilla; //Semilla para inicializacion del aleatorio
     private Poblacion poblacion;
+    private double feromonas[][];
     
     public SCH(CargaDatos data, Configurador conf, Long seed){
          this.datos = data;
          this.config = conf;
          this.semilla = seed;
          this.poblacion = new Poblacion(semilla, datos, true, config);
+         this.feromonas = new double[datos.getTamMatriz()][datos.getTamMatriz()];
+         for (int i = 0; i < datos.getTamMatriz(); i++) {
+             for (int j = 0; j < datos.getTamMatriz(); j++) {
+//                 TODO asignación de los valores de la feromona inicial
+             }
+            
+        }
     }
     
     public void ejecutar() throws Exception{
         //TODO
+        int iteracion = 0;
+        while(iteracion < config.getIteraciones()){
+            
+        }
     }
 }
