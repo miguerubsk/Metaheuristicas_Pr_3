@@ -19,15 +19,14 @@ public class Configurador {
     private ArrayList<String> Ficheros;
     private ArrayList<Long> Semillas;
     private ArrayList<Integer> alfa, beta;
-    private ArrayList<Float> greedy, feromonaInicial;
+    private ArrayList<Float> greedy, fInicial;
     private Integer Iteraciones, TamPoblacion;
     private float delta, fi, p, q0;
 
     public Configurador(String ruta) {
         Ficheros = new ArrayList<String>();
         Semillas = new ArrayList<Long>();
-        greedy = new ArrayList<Float>();
-        feromonaInicial = new ArrayList<Float>();
+        fInicial = new ArrayList<Float>();
 
         String linea;
         FileReader f = null;
@@ -59,8 +58,7 @@ public class Configurador {
                     case "greedy":
                         String[] vG = split[1].split(" ");
                         for (int i = 0; i < vG.length; i++) {
-                            greedy.add(Float.parseFloat(vG[i]));
-                            feromonaInicial.add(1/(Float.parseFloat(vG[i])*TamPoblacion));
+                            fInicial.add(Float.parseFloat(vG[i]));
                         }
                         break;
                     case "alfa":
@@ -139,8 +137,8 @@ public class Configurador {
         return beta;
     }
 
-    public ArrayList<Float> getFeromonaInicial() {
-        return feromonaInicial;
+    public ArrayList<Float> getfInicial() {
+        return fInicial;
     }
 
 }
