@@ -27,6 +27,7 @@ public class Configurador {
         Ficheros = new ArrayList<String>();
         Semillas = new ArrayList<Long>();
         fInicial = new ArrayList<Float>();
+        alfa = new ArrayList<>();
 
         String linea;
         FileReader f = null;

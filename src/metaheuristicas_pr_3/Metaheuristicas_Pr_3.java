@@ -5,7 +5,10 @@
  */
 package metaheuristicas_pr_3;
 
+import SCH.SCH;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import tools.CargaDatos;
 import tools.Configurador;
 
@@ -19,6 +22,7 @@ public class Metaheuristicas_Pr_3 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         //Cargamos el archivo de configuracion
         Configurador config = new Configurador("config.txt");
 
@@ -27,7 +31,13 @@ public class Metaheuristicas_Pr_3 {
         for (int i = 0; i < config.getFicheros().size(); i++) {
             Datos.add(new CargaDatos(config.getFicheros().get(i)));
         }
-        
+
+        SCH algo = new SCH(Datos.get(0), config, (long) 26522589);
+        try {
+            algo.ejecutar();
+        } catch (Exception ex) {
+            Logger.getLogger(Metaheuristicas_Pr_3.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
 }

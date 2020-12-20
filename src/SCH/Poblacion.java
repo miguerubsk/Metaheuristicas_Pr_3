@@ -42,5 +42,9 @@ public class Poblacion {
             tamPoblacion++;
         }
     }
+
+    public int getTamPoblacion() {
+        return tamPoblacion;
+    }
     
 }
