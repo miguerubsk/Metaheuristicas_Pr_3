@@ -14,21 +14,26 @@ import tools.Random;
  * @author Miguerubsk
  */
 public class Hormiga {
-    
+
     private Vector<Integer> sol;
     private int tamSol;
     private double coste;
     private Random aleatorio;
     private CargaDatos datos;
-    
-    public Hormiga(long semilla, CargaDatos datos){
+    private boolean marcados[];
+
+    public Hormiga(long semilla, CargaDatos datos) {
         this.datos = datos;
         this.aleatorio = new Random(semilla);
         this.tamSol = this.datos.getTamSolucion();
         this.sol = new Vector<Integer>();
         this.coste = coste(this.datos);
+        this.marcados = new boolean[datos.getTamMatriz()];
+        for (boolean marcado : marcados) {
+            marcado = false;
+        }
     }
-    
+
     /**
      * @brief Función que calcula el coste de la solucion
      * @param matriz matriz de distancias
@@ -46,5 +51,36 @@ public class Hormiga {
 
         return coste;
     }
+
+    public void inicializar() {
+        int primero = aleatorio.Randint(0, datos.getTamMatriz());
+        sol.add(primero);
+        marcados[primero] = true;
+    }
+
+    public boolean isMarcado(int cual) {
+
+        return marcados[cual];
+    }
+    
+    public void setMarcado(int cual) {
+        marcados[cual] = true;
+    }
+    
+    public int getElementoSol(int cual){
+        return sol.get(cual);
+    }
+
+    public void setElementoSol(int cual, int ele){
+        sol.set(cual, ele);
+    }
+    
+    public void setElementoSol(int ele){
+        sol.add(ele);
+    }
+    public Vector<Integer> getSol() {
+        return sol;
+    }
+    
     
 }
