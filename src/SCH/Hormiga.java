@@ -53,7 +53,11 @@ public class Hormiga {
     }
 
     public void inicializar() {
-        int primero = aleatorio.Randint(0, datos.getTamMatriz());
+        sol.removeAllElements();
+        for (boolean marcado : marcados) {
+            marcado = false;
+        }
+        int primero = aleatorio.Randint(0, datos.getTamMatriz() - 1);
         sol.add(primero);
         marcados[primero] = true;
     }
@@ -62,25 +66,25 @@ public class Hormiga {
 
         return marcados[cual];
     }
-    
+
     public void setMarcado(int cual) {
         marcados[cual] = true;
     }
-    
-    public int getElementoSol(int cual){
+
+    public int getElementoSol(int cual) {
         return sol.get(cual);
     }
 
-    public void setElementoSol(int cual, int ele){
+    public void setElementoSol(int cual, int ele) {
         sol.set(cual, ele);
     }
-    
-    public void setElementoSol(int ele){
+
+    public void setElementoSol(int ele) {
         sol.add(ele);
     }
+
     public Vector<Integer> getSol() {
         return sol;
     }
-    
-    
+
 }
