@@ -78,26 +78,26 @@ public class SCH {
                         }
                     }
 
-                    //Calculamos la distancia minima y maxima
-                    double mayord = 0, menord = 999999999;
+                    //CALCULAR DISTANCIA MINIMA Y MAXIMA
+                    double mayor = 0, menor = 999999999;
                     for (int i = 0; i < datos.getTamMatriz(); i++) {
                         if (!poblacion.getHormiga(h).isMarcado(i)) {
-                            if (distancias.get(i) < menord) {
-                                menord = distancias.get(i);
-                            } else if (distancias.get(i) > mayord) {
-                                mayord = distancias.get(i);
+                            if (distancias.get(i) < menor) {
+                                menor = distancias.get(i);
+                            } else if (distancias.get(i) > mayor) {
+                                mayor = distancias.get(i);
                             }
                         }
                     }
 
-                    //elegimos componentes para LRC
+                    //RELLENAMOS LA LRC
                     for (int i = 0; i < datos.getTamMatriz() - 1; i++) {
-                        if (!(poblacion.getHormiga(h).isMarcado(i)) && (distancias.get(i) >= (menord + (config.getDelta() * (mayord - menord))))) {
+                        if (!(poblacion.getHormiga(h).isMarcado(i)) && (distancias.get(i) >= (menor + (config.getDelta() * (mayor - menor))))) {
                             LRC.add(i);
                         }
                     }
 
-                    //ELECCION del ELEMENTO de la LRC a incluir en la solucion 
+                    //ELECCION DEL ELEMENTO DE LA LRC QUE INCLUIRA LA SOLUCION
                     Vector<Double> ferxHeu = new Vector<>(LRC.size());
                     for (Double double1 : ferxHeu) {
                         double1 = 0.0;
@@ -195,6 +195,19 @@ public class SCH {
                         }
                     }
                 }
+
+                // y se evapora en todos los arcos de la matriz de feromona (cristobal), solo se evapora en los arcos
+                //de la mejor solución global (UGR)
+                for (int i = 0; i < datos.getTamMatriz(); i++) {
+                    for (int j = 0; j < datos.getTamMatriz(); j++) {
+                        if (i != j) {
+                            feromonas[i][j] = ((1 - 0.1) * feromonas[i][j]);
+                        }
+                    }
+                }
+
+                //LIMPIAMOS HORMIGAS
+                poblacion.reiniciar();
             } //fin cuando las hormigas estan completas      
             System.out.println("///////////////////////////////////////////////////////////////////////////////");
 

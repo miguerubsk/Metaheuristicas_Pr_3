@@ -56,6 +56,11 @@ public class Poblacion {
     public Hormiga getHormiga(int cual) {
         return poblacion.get(cual);
     }
-    
-    
+
+    void reiniciar() {
+        tamPoblacion = 0;
+        this.poblacion.clear();
+        generarPoblacion();
+    }
+
 }
