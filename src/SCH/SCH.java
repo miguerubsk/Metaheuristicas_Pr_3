@@ -71,7 +71,7 @@ public class SCH {
                     for (int i = 0; i < datos.getTamMatriz(); i++) {
                         double d = 0.0;
                         if (!poblacion.getHormiga(h).isMarcado(i)) {
-                            for (int k = 0; k < comp; k++) {
+                            for (int k = 0; k < poblacion.getHormiga(h).getSol().size(); k++) {
                                 d += datos.getMatriz()[i][poblacion.getHormiga(h).getElementoSol(k)];
                             }
                             distancias.setElementAt(d, i);
@@ -168,7 +168,12 @@ public class SCH {
                 //actualización de feromona local, que afecta a todos los ya incluidos en la solActual.
                 for (int h = 0; h < poblacion.getTamPoblacion(); h++) {
                     for (int i = 0; i < comp; i++) {
-                        feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(comp)] = ((1 - 0.1) * feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(comp)]) + (0.1 * greedy);
+                        System.err.println("i= " + i);
+
+                        if (comp == 2) {
+                            System.err.println("comp= " + (comp - 1));
+                        }
+                        feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol((comp - 1))] = ((1 - 0.1) * feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol((comp - 1))]) + (0.1 * greedy);
                     }
                 }
 

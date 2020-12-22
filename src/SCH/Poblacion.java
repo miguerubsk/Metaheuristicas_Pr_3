@@ -61,6 +61,7 @@ public class Poblacion {
         tamPoblacion = 0;
         this.poblacion.clear();
         generarPoblacion();
+        inicializar();
     }
 
 }
