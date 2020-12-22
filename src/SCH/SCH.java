@@ -187,7 +187,7 @@ public class SCH {
                 }
 
                 double deltaMejor = mejorCosteActual;
-                for (int i = 0; i < datos.getTamSolucion(); i++) {
+                for (int i = 0; i < s.getSol().size(); i++) {
                     for (int j = 0; j < datos.getTamMatriz(); j++) {
                         if (s.getElementoSol(i) != j) {
                             feromonas[s.getElementoSol(i)][j] += (0.1 * deltaMejor);
