@@ -15,7 +15,8 @@ import tools.Random;
  */
 public class Hormiga {
 
-    private Vector<Integer> sol;
+    private Integer sol[];
+    private int tamSolMax;
     private int tamSol;
     private double coste;
     private Random aleatorio;
@@ -25,13 +26,11 @@ public class Hormiga {
     public Hormiga(long semilla, CargaDatos datos) {
         this.datos = datos;
         this.aleatorio = new Random(semilla);
-        this.tamSol = this.datos.getTamSolucion();
-        this.sol = new Vector<Integer>();
+        this.tamSolMax = this.datos.getTamSolucion();
+        this.tamSol = 0;
+        this.sol = new Integer[datos.getTamSolucion()];
         this.coste = coste(this.datos);
         this.marcados = new boolean[datos.getTamMatriz()];
-        for (boolean marcado : marcados) {
-            marcado = false;
-        }
     }
 
     /**
@@ -43,9 +42,9 @@ public class Hormiga {
     private double coste(CargaDatos datos) {
         double coste = 0.0;
 
-        for (int i = 0; i < sol.size(); i++) {
-            for (int j = i + 1; j < sol.size(); j++) {
-                coste += datos.getMatriz()[sol.get(j)][sol.get(i)];
+        for (int i = 0; i < tamSol; i++) {
+            for (int j = i + 1; j < tamSol; j++) {
+                coste += datos.getMatriz()[sol[j]][sol[i]];
             }
         }
 
@@ -53,17 +52,20 @@ public class Hormiga {
     }
 
     public void inicializar() {
-        sol.removeAllElements();
-        for (boolean marcado : marcados) {
-            marcado = false;
+        for (int i = 0; i < datos.getTamSolucion(); i++) {
+            sol[i] = -1;
         }
+        for (int i = 0; i < datos.getTamMatriz(); i++) {
+            marcados[i] = false;
+        }
+        
         int primero = aleatorio.Randint(0, datos.getTamMatriz() - 1);
-        sol.add(primero);
+        sol[0] = primero;
         marcados[primero] = true;
+        tamSol++;
     }
 
     public boolean isMarcado(int cual) {
-
         return marcados[cual];
     }
 
@@ -72,18 +74,19 @@ public class Hormiga {
     }
 
     public int getElementoSol(int cual) {
-        return sol.get(cual);
+        return sol[cual];
     }
 
     public void setElementoSol(int cual, int ele) {
-        sol.set(cual, ele);
+        sol[cual] = ele;
     }
 
-    public void setElementoSol(int ele) {
-        sol.add(ele);
+    public void addElementoSol(int ele) {
+        sol[tamSol] = ele;
+        tamSol++;
     }
 
-    public Vector<Integer> getSol() {
+    public Integer[] getSol() {
         return sol;
     }
 

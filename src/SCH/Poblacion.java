@@ -59,9 +59,7 @@ public class Poblacion {
 
     void reiniciar() {
         tamPoblacion = 0;
-        this.poblacion.clear();
         generarPoblacion();
-        inicializar();
     }
 
 }

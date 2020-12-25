@@ -71,7 +71,7 @@ public class SCH {
                     for (int i = 0; i < datos.getTamMatriz(); i++) {
                         double d = 0.0;
                         if (!poblacion.getHormiga(h).isMarcado(i)) {
-                            for (int k = 0; k < poblacion.getHormiga(h).getSol().size(); k++) {
+                            for (int k = 0; k < comp; k++) {
                                 d += datos.getMatriz()[i][poblacion.getHormiga(h).getElementoSol(k)];
                             }
                             distancias.setElementAt(d, i);
@@ -91,7 +91,7 @@ public class SCH {
                     }
 
                     //RELLENAMOS LA LRC
-                    for (int i = 0; i < datos.getTamMatriz() - 1; i++) {
+                    for (int i = 0; i < datos.getTamMatriz(); i++) {
                         if (!(poblacion.getHormiga(h).isMarcado(i)) && (distancias.get(i) >= (menor + (config.getDelta() * (mayor - menor))))) {
                             LRC.add(i);
                         }
@@ -99,8 +99,8 @@ public class SCH {
 
                     //ELECCION DEL ELEMENTO DE LA LRC QUE INCLUIRA LA SOLUCION
                     Vector<Double> ferxHeu = new Vector<>(LRC.size());
-                    for (Double double1 : ferxHeu) {
-                        double1 = 0.0;
+                    for (int i = 0; i < LRC.size(); i++) {
+                        ferxHeu.add(0.0);
                     }
 
                     //calculo la cantidad total de feromonaxheuristica por cada elemento de la LRC 
@@ -108,7 +108,7 @@ public class SCH {
                     for (int i = 0; i < LRC.size(); i++) {
                         for (int j = 0; j < comp; j++) {
                             Double aux = Math.pow(heuristica[j][LRC.get(i)], 1) * Math.pow(feromonas[j][LRC.get(i)], 1);//HAY QUE VARIAR EL BETA Y ALFA
-                            ferxHeu.add(aux);
+                            ferxHeu.setElementAt(aux, i);
                         }
                     }
 
@@ -142,7 +142,7 @@ public class SCH {
                         for (int i = 0; i < LRC.size(); i++) {
                             double numerador = ferxHeu.get(i);
                             Double aux = numerador / denominador;
-                            prob.add(aux);
+                            prob.setElementAt(aux, i);
                         }
 
                         //elegimos la componente a añadir buscando en los intervalos de probabilidad                                        
@@ -157,7 +157,7 @@ public class SCH {
                         }
                     }
 
-                    poblacion.getHormiga(h).setElementoSol(elegido);
+                    poblacion.getHormiga(h).addElementoSol(elegido);
                     poblacion.getHormiga(h).setMarcado(elegido);
 
 //                muestraHormiga(hormigas[h]);
@@ -168,63 +168,60 @@ public class SCH {
                 //actualización de feromona local, que afecta a todos los ya incluidos en la solActual.
                 for (int h = 0; h < poblacion.getTamPoblacion(); h++) {
                     for (int i = 0; i < comp; i++) {
-                        int aux = comp - 1;
-                        if (comp < poblacion.getHormiga(h).getSol().size()) {
-                            feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(aux)] = ((1 - 0.1) * feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(aux)]) + (0.1 * greedy);
-                        }
+                        feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(comp)] = ((1 - 0.1) * feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(comp)]) + (0.1 * greedy);
                     }
                 }
-
-                mejorCosteActual = 0;
-                for (int i = 0; i < poblacion.getTamPoblacion(); i++) {
-                    double coste = Coste(poblacion.getHormiga(i).getSol(), datos.getMatriz(), poblacion.getHormiga(i).getSol().size());
-                    if (coste > mejorCosteActual) {
-                        mejorCosteActual = coste;
-                        mejorHormigaActual = poblacion.getHormiga(i);
-                    }
-                }
-
-                if (mejorCosteActual > mejorCosteGlobal) {
-                    mejorCosteGlobal = mejorCosteActual;
-                    s = mejorHormigaActual;
-                }
-
-                double deltaMejor = mejorCosteActual;
-                for (int i = 0; i < s.getSol().size(); i++) {
-                    for (int j = 0; j < datos.getTamMatriz(); j++) {
-                        if (s.getElementoSol(i) != j) {
-                            feromonas[s.getElementoSol(i)][j] += (0.1 * deltaMejor);
-                            feromonas[j][s.getElementoSol(i)] = feromonas[s.getElementoSol(i)][j];  //simetrica
-                        }
-                    }
-                }
-
-                // y se evapora en todos los arcos de la matriz de feromona (cristobal), solo se evapora en los arcos
-                //de la mejor solución global (UGR)
-                for (int i = 0; i < datos.getTamMatriz(); i++) {
-                    for (int j = 0; j < datos.getTamMatriz(); j++) {
-                        if (i != j) {
-                            feromonas[i][j] = ((1 - 0.1) * feromonas[i][j]);
-                        }
-                    }
-                }
-
-                //LIMPIAMOS HORMIGAS
-                poblacion.reiniciar();
-            } //fin cuando las hormigas estan completas      
-            System.out.println("///////////////////////////////////////////////////////////////////////////////");
-
-            for (int i = 0; i < poblacion.getTamPoblacion(); i++) {
-                System.out.println("Hormiga " + i + ". Tamaño: " + datos.getTamSolucion() + "/" + poblacion.getHormiga(i).getSol().size() + ". Solucion: " + poblacion.getHormiga(i).getSol().toString() + "\n");
             }
+
+            mejorCosteActual = 0;
+            for (int i = 0; i < poblacion.getTamPoblacion(); i++) {
+                double coste = Coste(poblacion.getHormiga(i).getSol(), datos.getMatriz(), datos.getTamSolucion());
+                if (coste > mejorCosteActual) {
+                    mejorCosteActual = coste;
+                    mejorHormigaActual = poblacion.getHormiga(i);
+                }
+            }
+
+            if (mejorCosteActual > mejorCosteGlobal) {
+                mejorCosteGlobal = mejorCosteActual;
+                s = mejorHormigaActual;
+            }
+
+            double deltaMejor = mejorCosteActual;
+            for (int i = 0; i < datos.getTamSolucion(); i++) {
+                for (int j = 0; j < datos.getTamMatriz(); j++) {
+                    if (s.getElementoSol(i) != j) {
+                        feromonas[s.getElementoSol(i)][j] += (0.1 * deltaMejor);
+                        feromonas[j][s.getElementoSol(i)] = feromonas[s.getElementoSol(i)][j];  //simetrica
+                    }
+                }
+            }
+
+            // y se evapora en todos los arcos de la matriz de feromona (cristobal), solo se evapora en los arcos
+            //de la mejor solución global (UGR)
+            for (int i = 0; i < datos.getTamMatriz(); i++) {
+                for (int j = 0; j < datos.getTamMatriz(); j++) {
+                    if (i != j) {
+                        feromonas[i][j] = ((1 - 0.1) * feromonas[i][j]);
+                    }
+                }
+            }
+
+            //LIMPIAMOS HORMIGAS
+            poblacion.reiniciar();
+        } //fin cuando las hormigas estan completas      
+        System.out.println("///////////////////////////////////////////////////////////////////////////////");
+
+        for (int i = 0; i < poblacion.getTamPoblacion(); i++) {
+            System.out.println("Hormiga " + i + ". Tamaño: " + datos.getTamSolucion() + "/" + poblacion.getHormiga(i).getSol().length + ". Solucion: " + poblacion.getHormiga(i).getSol().toString() + "\n");
         }
     }
 
-    private double Coste(Vector<Integer> s, double dist[][], long m) {
+    private double Coste(Integer s[], double dist[][], int m) {
         double cost = 0.0;
         for (int i = 0; i < m - 1; i++) {
             for (int j = i + 1; j < m; j++) {
-                cost += dist[s.get(i)][s.get(j)];
+                cost += dist[s[i]][s[j]];
             }
         }
         return cost;
