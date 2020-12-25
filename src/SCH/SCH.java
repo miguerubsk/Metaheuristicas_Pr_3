@@ -54,6 +54,7 @@ public class SCH {
     public void ejecutar() throws Exception {
         //TODO
         int iteracion = 0;
+        double tiempo = 0;
 
         while (iteracion < 300) {
             poblacion.inicializar();
