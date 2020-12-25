@@ -54,9 +54,10 @@ public class SCH {
     public void ejecutar() throws Exception {
         //TODO
         int iteracion = 0;
-        double tiempo = 0;
+        long tiempo = 0;
 
-        while (iteracion < 300) {
+        while (iteracion < config.getIteraciones() || tiempo < 600000) {
+            long startTime = System.currentTimeMillis();
             poblacion.inicializar();
 //            System.out.println("SCH.SCH.ejecutar(): " + iteracion);
 
@@ -212,6 +213,8 @@ public class SCH {
             //LIMPIAMOS HORMIGAS
             poblacion.reiniciar();
             iteracion++;
+            long stopTime = System.currentTimeMillis();
+            tiempo += stopTime - startTime;
         } //fin cuando las hormigas estan completas      
         System.out.println("///////////////////////////////////////////////////////////////////////////////");
 
