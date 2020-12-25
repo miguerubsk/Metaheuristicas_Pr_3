@@ -55,8 +55,9 @@ public class SCH {
         //TODO
         int iteracion = 0;
 
-        while (iteracion < config.getIteraciones()) {
+        while (iteracion < 300) {
             poblacion.inicializar();
+//            System.out.println("SCH.SCH.ejecutar(): " + iteracion);
 
             for (int comp = 1; comp < datos.getTamSolucion(); comp++) {
                 for (int h = 0; h < poblacion.getTamPoblacion(); h++) {
@@ -157,7 +158,7 @@ public class SCH {
                         }
                     }
 
-                    poblacion.getHormiga(h).addElementoSol(elegido);
+                    poblacion.getHormiga(h).setElementoSol(comp, elegido);
                     poblacion.getHormiga(h).setMarcado(elegido);
 
 //                muestraHormiga(hormigas[h]);
@@ -209,6 +210,7 @@ public class SCH {
 
             //LIMPIAMOS HORMIGAS
             poblacion.reiniciar();
+            iteracion++;
         } //fin cuando las hormigas estan completas      
         System.out.println("///////////////////////////////////////////////////////////////////////////////");
 
