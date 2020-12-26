@@ -56,7 +56,7 @@ public class SCH {
         int iteracion = 0;
         long tiempo = 0;
 
-        while (iteracion < config.getIteraciones() || tiempo < 600000) {
+        while (iteracion < config.getIteraciones() && tiempo < 600000) {
             long startTime = System.currentTimeMillis();
             poblacion.inicializar();
 //            System.out.println("SCH.SCH.ejecutar(): " + iteracion);
