@@ -216,7 +216,7 @@ public class SCH {
             long stopTime = System.currentTimeMillis();
             tiempo += stopTime - startTime;
         } //fin cuando las hormigas estan completas      
-        System.out.println("///////////////////////////////////////////////////////////////////////////////");
+        System.out.println("Iteraciones: "+iteracion+"\nTiempo: "+tiempo+"\n///////////////////////////////////////////////////////////////////////////////");
 
         for (int i = 0; i < poblacion.getTamPoblacion(); i++) {
             System.out.println("Hormiga " + i + ". Tamaño: " + datos.getTamSolucion() + "/" + poblacion.getHormiga(i).getSol().length + ". Solucion: " + poblacion.getHormiga(i).getSol().toString() + "\n");
