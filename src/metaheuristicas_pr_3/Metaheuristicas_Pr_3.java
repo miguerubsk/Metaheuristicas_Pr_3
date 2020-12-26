@@ -31,13 +31,14 @@ public class Metaheuristicas_Pr_3 {
         for (int i = 0; i < config.getFicheros().size(); i++) {
             Datos.add(new CargaDatos(config.getFicheros().get(i)));
         }
-
-        SCH algo = new SCH(Datos.get(0), config, (long) 26522589);
+        
+        SCH algoritmo = new SCH(Datos.get(0), config, (long)26522589, 19000);
         try {
-            algo.ejecutar();
+            algoritmo.ejecutar();
         } catch (Exception ex) {
             Logger.getLogger(Metaheuristicas_Pr_3.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
 }
