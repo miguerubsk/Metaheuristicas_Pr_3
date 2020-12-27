@@ -6,8 +6,6 @@
 package SCH;
 
 import java.util.Vector;
-import tools.CargaDatos;
-import tools.Configurador;
 import tools.Random;
 
 /**

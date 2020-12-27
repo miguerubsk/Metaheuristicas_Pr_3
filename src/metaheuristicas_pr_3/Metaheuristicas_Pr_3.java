@@ -31,14 +31,20 @@ public class Metaheuristicas_Pr_3 {
         for (int i = 0; i < config.getFicheros().size(); i++) {
             Datos.add(new CargaDatos(config.getFicheros().get(i)));
         }
-        
-        SCH algoritmo = new SCH();
-        try {
-            algoritmo.ejecutar(Datos.get(0).getMatriz(), Datos.get(0).getTamMatriz(), Datos.get(0).getTamSolucion(), 100, config.getTamPoblacion(), 19000, 1, 1, 0.95, 0.1, 0.1,0.6);
-        } catch (Exception ex) {
-            Logger.getLogger(Metaheuristicas_Pr_3.class.getName()).log(Level.SEVERE, null, ex);
+
+        for (CargaDatos Dato : Datos) {
+            for (Integer alfa : config.getAlfa()) {
+                for (Integer beta : config.getBeta()) {
+                    SCH algoritmo = new SCH();
+                    try {
+                        algoritmo.ejecutar(Dato.getMatriz(), Dato.getTamMatriz(), Dato.getTamSolucion(), config.getIteraciones(), config.getTamPoblacion(), 19000, alfa, beta, config.getQ0(), config.getP(), config.getFi(), config.getDelta());
+                    } catch (Exception ex) {
+                        Logger.getLogger(Metaheuristicas_Pr_3.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
         }
-        
+
     }
 
 }
