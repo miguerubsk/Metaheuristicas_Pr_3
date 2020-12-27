@@ -5,6 +5,7 @@
  */
 package SCH;
 
+import java.util.Arrays;
 import java.util.Vector;
 import tools.Random;
 
@@ -15,10 +16,9 @@ import tools.Random;
 public class SCH {
 
     private double matriz[][]; //Matriz de distancias
-    private Integer mejorSolucion[];
-    private double mejorCosteActual;
-    private double mejorCosteGlobal;
-    private Integer mejorHormigaActual[];
+    private Integer mejorSolucion[], mejorHormigaActual[];
+    private double mejorCosteActual, mejorCosteGlobal;
+    private String Solucion;
 
     //Parametros para el sistema
     private int n, m, poblacion, numIteraciones, beta;
@@ -45,7 +45,7 @@ public class SCH {
         this.beta = beta;
         this.alfa = alfa;
         this.p = p;
-
+        this.Solucion = "";
         this.aleatorio = new Random(semilla);
     }
 
@@ -233,6 +233,7 @@ public class SCH {
             if (mejorCosteActual > mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteActual;
                 mejorSolucion = mejorHormigaActual;
+                Solucion = toString(mejorSolucion);
             }
 
             //Demonio
@@ -260,7 +261,7 @@ public class SCH {
                                 "\nBeta: " + beta + 
                                 "\nTiempo: " + tiempo + 
                                 "\nCoste: " + mejorCosteGlobal + 
-                                "\nSolucion: " + mejorSolucion.toString());
+                                "\nSolucion: " + Solucion);
         System.out.println("Total Iteraciones:" + iteracion);
 
     }
@@ -295,5 +296,16 @@ public class SCH {
                 }
             }
         }
+    }
+    private String toString(Integer sol[]){
+        String aux = "[";
+        Arrays.sort(sol);
+        for(int i = 0; i < sol.length; i++){
+            aux += sol[i];
+            if(i < sol.length -1)
+                aux += ",";
+        }
+        aux += "]";
+        return aux;
     }
 }
