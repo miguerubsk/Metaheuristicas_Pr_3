@@ -27,7 +27,7 @@ public class SCH {
 
     private Random aleatorio;
 
-    public SCH(String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
+    public SCH(Long semilla, String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
         this.matriz = matriz;
         this.mejorSolucion = null;
         this.mejorCosteActual = 0;
@@ -46,7 +46,7 @@ public class SCH {
         this.alfa = alfa;
         this.p = p;
 
-        this.aleatorio = new Random(26522589);
+        this.aleatorio = new Random(semilla);
     }
 
     public void ejecutar() {

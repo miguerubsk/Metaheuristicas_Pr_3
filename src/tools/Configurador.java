@@ -20,14 +20,14 @@ public class Configurador {
     private ArrayList<String> Ficheros;
     private ArrayList<Long> Semillas;
     private ArrayList<Integer> alfa, beta;
-    private HashMap<String, double> fInicial;
+    private HashMap<String, Double> fInicial;
     private Integer Iteraciones, TamPoblacion;
     private float delta, fi, p, q0;
 
     public Configurador(String ruta) {
         Ficheros = new ArrayList<String>();
         Semillas = new ArrayList<Long>();
-        fInicial = new HashMap<String, double>;
+        fInicial = new HashMap<String, Double>();
         this.alfa = new ArrayList<>();
         this.beta = new ArrayList<>();
 
@@ -128,10 +128,6 @@ public class Configurador {
         return q0;
     }
 
-    public ArrayList<Float> getGreedy() {
-        return greedy;
-    }
-
     public ArrayList<Integer> getAlfa() {
         return alfa;
     }
@@ -140,7 +136,7 @@ public class Configurador {
         return beta;
     }
 
-    public ArrayList<Float> getfInicial() {
+    public HashMap<String, Double> getfInicial() {
         return fInicial;
     }
 
