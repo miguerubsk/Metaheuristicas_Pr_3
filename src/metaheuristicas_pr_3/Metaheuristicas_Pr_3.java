@@ -32,9 +32,9 @@ public class Metaheuristicas_Pr_3 {
             Datos.add(new CargaDatos(config.getFicheros().get(i)));
         }
         
-        SCH algoritmo = new SCH(Datos.get(1), config, (long)26522589, 19000);
+        SCH algoritmo = new SCH();
         try {
-            algoritmo.ejecutar();
+            algoritmo.ejecutar(Datos.get(0).getMatriz(), Datos.get(0).getTamMatriz(), Datos.get(0).getTamSolucion(), 100, config.getTamPoblacion(), 19000, 1, 1, 0.95, 0.1, 0.1,0.6);
         } catch (Exception ex) {
             Logger.getLogger(Metaheuristicas_Pr_3.class.getName()).log(Level.SEVERE, null, ex);
         }

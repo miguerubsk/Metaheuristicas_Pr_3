@@ -16,104 +16,125 @@ import tools.Random;
  */
 public class SCH {
 
-    private final CargaDatos datos; //Datos para realizar la ejecucion
-    private final Configurador config; //Archivo de configuracion
-    private final Long semilla; //Semilla para inicializacion del aleatorio
-    private double feromonas[][];
-    private double heuristica[][];
-    private Vector<Integer> LRC;
-    private Poblacion poblacion;
-    private double greedy;
-    private double mejorCosteActual;
-    private Integer mejorHormigaActual[];
-    private double mejorCosteGlobal;
-    private Integer s[];
+    public void ejecutar(double dist[][],
+            int n, int m, long iteraciones, int poblacion,
+            double greedy, int alfa, int beta, double q0, double p,
+            double fi, double delta) {
 
-    public SCH(CargaDatos data, Configurador conf, Long seed, double greedy) {
-        this.datos = data;
-        this.config = conf;
-        this.semilla = seed;
-        this.poblacion = new Poblacion(semilla, datos, true, config);
-        this.feromonas = new double[datos.getTamMatriz()][datos.getTamMatriz()];
-        this.heuristica = new double[datos.getTamMatriz()][datos.getTamMatriz()];
-        this.LRC = new Vector<>();
-        this.greedy = greedy;
-        this.mejorCosteActual = 0;
-        this.mejorCosteGlobal = 0;
+        Integer s[] = null;
+        Random aleatorio = new Random(26525289);
+        //Declaracion de variables y estructuras de sistema 
+        Double feromona[][];
+        Double heuristica[][];
+        Vector<Integer> LRC;
+        Integer hormigas[][];
+        Boolean marcados[][];
 
+        double mejorCosteActual, mejorCosteGlobal = 0;
+        Integer mejorHormigaActual[] = null;
+
+        //Inicializamos la matriz de Hormigas, Heurística y de Feromona, vectores    
+        feromona = new Double[n][n];
+        heuristica = new Double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                heuristica[i][j] = 0.0;
+                feromona[i][j] = 0.0;
+            }
+        }
+        LRC = new Vector<>();
+        hormigas = new Integer[poblacion][m];
+        for (Integer[] hormiga : hormigas) {
+            for (Integer integer : hormiga) {
+                integer = 0;
+            }
+        }
+
+        marcados = new Boolean[poblacion][n];
+        for (int i = 0; i < poblacion; i++) {
+            for (int j = 0; j < n; j++) {
+                marcados[i][j] = false;
+            }
+        }
+
+        //Carga inicial de feromona y de la heuristica
         double fInicial = greedy;
-        for (int i = 0; i < config.getTamPoblacion(); i++) {
-            for (int j = 0; j < config.getTamPoblacion(); j++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 if (i != j) {
-                    feromonas[i][j] = fInicial;
-                    heuristica[i][j] = datos.getMatriz()[i][j];
+                    feromona[i][j] = fInicial;
+                    heuristica[i][j] = dist[i][j];
                 }
             }
         }
 
-    }
+        //Contador de iteraciones del sistema
+        int cont = 0;
+        //PRINCIPAL: Comienzan las iteraciones
 
-    public void ejecutar() throws Exception {
-        //TODO
-        int iteracion = 0;
-        long tiempo = 0;
+        double tiempo = 0;
+        while (cont < iteraciones && tiempo < 600000) {
 
-        while (iteracion < 100 && tiempo < 600000) {
-            long startTime = System.currentTimeMillis();
-            poblacion.inicializar();
-            System.out.println("SCH.SCH.ejecutar(): " + iteracion);
+            //Carga de las hormigas iniciales
+            for (int i = 0; i < poblacion; i++) {
+                hormigas[i][0] = aleatorio.Randint(0, n - 1);
+                marcados[i][hormigas[i][0]] = true;
+            }
 
-            for (int comp = 1; comp < datos.getTamSolucion(); comp++) {
-                for (int h = 0; h < poblacion.getTamPoblacion(); h++) {
+            char c;
+            //GENERAMOS las m-1 componentes pdtes. de las hormigas
+            for (int comp = 1; comp < m; comp++) {
+                //Para cada hormiga
+                for (int h = 0; h < poblacion; h++) {
 
-                    //VECTOR DE DISTANCIAS
-                    Vector<Double> distancias = new Vector<>(datos.getTamMatriz());
-                    for (int i = 0; i < datos.getTamMatriz(); i++) {
-                        distancias.add(-1.0);
+                    //vector que almacena las distancias
+                    Double distancias[];
+                    distancias = new Double[n];
+                    for (Double distancia : distancias) {
+                        distancia = -1.0;
                     }
 
-                    //DISTANCIAS DE LAS POSIBLES SOLUCIONES              
-                    for (int i = 0; i < datos.getTamMatriz(); i++) {
+                    //Calculamos las distancias de las n componentes candidatas:               
+                    for (int i = 0; i < n; i++) {
                         double d = 0.0;
-                        if (!poblacion.getHormiga(h).isMarcado(i)) {
+                        if (!marcados[h][i]) {
                             for (int k = 0; k < comp; k++) {
-                                d += datos.getMatriz()[i][poblacion.getHormiga(h).getElementoSol(k)];
+                                d += dist[i][hormigas[h][k]];
                             }
-                            distancias.setElementAt(d, i);
+                            distancias[i] = d;
                         }
                     }
 
-                    //CALCULAR DISTANCIA MINIMA Y MAXIMA
-                    double mayor = 0, menor = 999999999;
-                    for (int i = 0; i < datos.getTamMatriz(); i++) {
-                        if (!poblacion.getHormiga(h).isMarcado(i)) {
-                            if (distancias.get(i) < menor) {
-                                menor = distancias.get(i);
-                            } else if (distancias.get(i) > mayor) {
-                                mayor = distancias.get(i);
+                    //Calculamos la distancia minima y maxima
+                    double mayord = 0, menord = 999999999;
+                    for (int i = 0; i < n; i++) {
+                        if (!marcados[h][i]) {
+                            if (distancias[i] < menord) {
+                                menord = distancias[i];
+                            } else if (distancias[i] > mayord) {
+                                mayord = distancias[i];
                             }
                         }
                     }
 
-                    //RELLENAMOS LA LRC
-                    for (int i = 0; i < datos.getTamMatriz(); i++) {
-                        if (!(poblacion.getHormiga(h).isMarcado(i)) && (distancias.get(i) >= (menor + (config.getDelta() * (mayor - menor))))) {
+                    //elegimos componentes para LRC
+                    for (int i = 0; i < n; i++) {
+                        if (!(marcados[h][i]) && (distancias[i] >= (menord + (delta * (mayord - menord))))) {
                             LRC.add(i);
                         }
                     }
 
-                    //ELECCION DEL ELEMENTO DE LA LRC QUE INCLUIRA LA SOLUCION
-                    Vector<Double> ferxHeu = new Vector<>(LRC.size());
+                    //ELECCION del ELEMENTO de la LRC a incluir en la solucion 
+                    Double ferxHeu[] = new Double[LRC.size()];
                     for (int i = 0; i < LRC.size(); i++) {
-                        ferxHeu.add(0.0);
+                        ferxHeu[i] = 0.0;
                     }
 
                     //calculo la cantidad total de feromonaxheuristica por cada elemento de la LRC 
                     //respecto de los elementos de la solución
                     for (int i = 0; i < LRC.size(); i++) {
                         for (int j = 0; j < comp; j++) {
-                            Double aux = Math.pow(heuristica[j][LRC.get(i)], 1) * Math.pow(feromonas[j][LRC.get(i)], 1);//HAY QUE VARIAR EL BETA Y ALFA
-                            ferxHeu.setElementAt(aux, i);
+                            ferxHeu[i] += Math.pow(heuristica[j][LRC.get(i)], beta) * Math.pow(feromona[j][LRC.get(i)], alfa);
                         }
                     }
 
@@ -123,39 +144,35 @@ public class SCH {
                     double argMax = 0.0;
                     int posArgMax = 0;
                     for (int i = 0; i < LRC.size(); i++) {
-                        denominador += ferxHeu.get(i);
-                        if (ferxHeu.get(i) > argMax) {
-                            argMax = ferxHeu.get(i);
+                        denominador += ferxHeu[i];
+                        if (ferxHeu[i] > argMax) {
+                            argMax = ferxHeu[i];
                             posArgMax = LRC.get(i);
                         }
                     }
 
                     //FUNCION de TRANSICION
                     //vector de probabilidades de transicion
-//                    System.out.println("SCH.SCH.ejecutar(): LRC size " + LRC.size());
                     int elegido = 0;
-                    Vector<Double> prob = new Vector<>(LRC.size());
-                    for (int i = 0; i < LRC.size(); i++) {
-                        prob.add(0.0);
+                    Double prob[] = new Double[LRC.size()];
+                    for (Double ele : prob) {
+                        ele = 0.0;
                     }
+                    double q = aleatorio.Randfloat(0, (float) 1.01);   //aleatorio inicial
 
-                    Random aleatorio = new Random(semilla * iteracion);
-                    double q = aleatorio.Randfloat(0, (float) 1.01);  //aleatorio inicial
-
-                    if (0.95 <= q) {  //aplicamos argumento maximo y nos quedamos con el mejor ESTO ES EL q0!!!!!!!!!!!!!
+                    if (q0 <= q) {  //aplicamos argumento maximo y nos quedamos con el mejor
                         elegido = posArgMax;
                     } else {  //aplicamos regla de transicion normal
                         for (int i = 0; i < LRC.size(); i++) {
-                            double numerador = ferxHeu.get(i);
-                            Double aux = numerador / denominador;
-                            prob.setElementAt(aux, i);
+                            double numerador = ferxHeu[i];
+                            prob[i] = numerador / denominador;
                         }
 
                         //elegimos la componente a añadir buscando en los intervalos de probabilidad                                        
-                        double Uniforme = (double)aleatorio.Randfloat(0, 1);  //aleatorio para regla de transición
+                        double Uniforme = aleatorio.Randfloat(0, (float) 1.0);  //aleatorio para regla de transición
                         double acumulado = 0.0;
                         for (int i = 0; i < LRC.size(); i++) {
-                            acumulado += prob.get(i);
+                            acumulado += prob[i];
                             if (Uniforme <= acumulado) {
                                 elegido = LRC.get(i);
                                 break;
@@ -163,8 +180,8 @@ public class SCH {
                         }
                     }
 
-                    poblacion.getHormiga(h).setElementoSol(comp, elegido);
-                    poblacion.getHormiga(h).setMarcado(elegido);
+                    hormigas[h][comp] = elegido;
+                    marcados[h][elegido] = true;
 
 //                muestraHormiga(hormigas[h]);
                     LRC.clear();
@@ -172,62 +189,87 @@ public class SCH {
                 } //fin agregado una componente a cada hormiga
 
                 //actualización de feromona local, que afecta a todos los ya incluidos en la solActual.
-                for (int h = 0; h < poblacion.getTamPoblacion(); h++) {
+                for (int h = 0; h < poblacion; h++) {
                     for (int i = 0; i < comp; i++) {
-                        feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(comp)] = ((1 - 0.1) * feromonas[poblacion.getHormiga(h).getElementoSol(i)][poblacion.getHormiga(h).getElementoSol(comp)]) + (0.1 * greedy);
+                        feromona[hormigas[h][i]][hormigas[h][comp]] = ((1 - fi) * feromona[hormigas[h][i]][hormigas[h][comp]]) + (fi * fInicial);
                     }
                 }
-            }
 
+            } //fin cuando las hormigas estan completas                 
+
+//         if (cont==14){
+//             c=getchar();
+//                    std::cout << "Iteracion" << ": " << cont << endl;
+//                    for (int k=0; k<poblacion; k++){ 
+//                        if (todosDif(hormigas[k]))
+//                             std::cout << "Todos diferentes" << std::endl;
+//                        std::cout << "Hormiga " << k << ":" <<std::endl;
+//                        muestraHormiga(hormigas[k]);
+//                    }
+//                    c=getchar();
+//                    
+//                }  
+            //CALCULAMOS la mejor HORMIGA
             mejorCosteActual = 0;
-            for (int i = 0; i < poblacion.getTamPoblacion(); i++) {
-                double coste = Coste(poblacion.getHormiga(i).getSol(), datos.getMatriz(), datos.getTamSolucion());
+            for (int i = 0; i < poblacion; i++) {
+                double coste = Coste(hormigas[i], dist, m);
                 if (coste > mejorCosteActual) {
                     mejorCosteActual = coste;
-                    mejorHormigaActual = poblacion.getHormiga(i).getSol().clone();
+                    mejorHormigaActual = hormigas[i];
                 }
             }
 
+            //ACTUALIZAMOS si la mejor actual mejora al mejor global
             if (mejorCosteActual > mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteActual;
                 s = mejorHormigaActual;
             }
 
+            //APLICAMOS el DEMONIO 
+            //(actualizacion de feromona (aporta la mejor Global y solo a los arcos de dicha solucion        
             double deltaMejor = mejorCosteActual;
-            for (int i = 0; i < datos.getTamSolucion(); i++) {
-                for (int j = 0; j < datos.getTamMatriz(); j++) {
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
                     if (s[i] != j) {
-                        feromonas[s[i]][j] += (0.1 * deltaMejor);
-                        feromonas[j][s[i]] = feromonas[s[i]][j];  //simetrica
+                        feromona[s[i]][j] += (p * deltaMejor);
+                        feromona[j][s[i]] = feromona[s[i]][j];  //simetrica
                     }
                 }
             }
 
             // y se evapora en todos los arcos de la matriz de feromona (cristobal), solo se evapora en los arcos
             //de la mejor solución global (UGR)
-            for (int i = 0; i < datos.getTamMatriz(); i++) {
-                for (int j = 0; j < datos.getTamMatriz(); j++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
                     if (i != j) {
-                        feromonas[i][j] = ((1 - 0.1) * feromonas[i][j]);
+                        feromona[i][j] = ((1 - p) * feromona[i][j]);
                     }
                 }
             }
 
             //LIMPIAMOS HORMIGAS
-            iteracion++;
-            long stopTime = System.currentTimeMillis();
-            tiempo += stopTime - startTime;
-        } //fin cuando las hormigas estan completas      
-        System.out.println("Iteraciones: " + iteracion + "\nTiempo: " + tiempo + "\n///////////////////////////////////////////////////////////////////////////////");
-        Vector<Integer> aux = new Vector<>();
-        for (int i = 0; i < datos.getTamSolucion(); i++) {
-            aux.add(s[i]);
+            for (int i = 0; i < poblacion; i++) {
+                for (int j = 0; j < m; j++) {
+                    hormigas[i][j] = 0;
+                }
+            }
+            for (int i = 0; i < poblacion; i++) {
+                for (int j = 0; j < n; j++) {
+                    marcados[i][j] = false;
+                }
+            }
+
+            cont++;
+
+            System.out.println("Iteracion: " + cont + " Coste: " + mejorCosteGlobal);
+
         }
-            
-        System.out.println("Mejor solucion actual: " + aux.toString() + ". Coste: " + Coste(s, datos.getMatriz(), datos.getTamSolucion()));
+
+        System.out.println(" Total Iteraciones:" + cont);
+
     }
 
-    private double Coste(Integer s[], double dist[][], int m) {
+    private double Coste(Integer s[], double dist[][], long m) {
         double cost = 0.0;
         for (int i = 0; i < m - 1; i++) {
             for (int j = i + 1; j < m; j++) {
