@@ -15,6 +15,10 @@ import tools.Random;
 public class SCH {
 
     private double matriz[][]; //Matriz de distancias
+    private Integer mejorSolucion[];
+    private double mejorCosteActual;
+    private double mejorCosteGlobal;
+    private Integer mejorHormigaActual[];
 
     //Parametros para el sistema
     private int n;
@@ -29,12 +33,19 @@ public class SCH {
     private double alfa;
     private double p;
 
+    private Random aleatorio;
+
     public SCH(double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
+        this.matriz = matriz;
+        this.mejorSolucion = null;
+        this.mejorCosteActual = 0;
+        this.mejorCosteGlobal = 0;
+        this.mejorHormigaActual = null;
+
         this.n = n;
         this.m = m;
         this.poblacion = poblacion;
         this.greedy = greedy;
-        this.matriz = matriz;
         this.numIteraciones = iteraciones;
         this.delta = delta;
         this.q0 = q0;
@@ -42,11 +53,11 @@ public class SCH {
         this.beta = beta;
         this.alfa = alfa;
         this.p = p;
+
+        this.aleatorio = new Random(26522589);
     }
 
     public void ejecutar() {
-        Integer mejorSolucion[] = null;
-        Random aleatorio = new Random(26525289);
         //Declaracion de vectores e inicializacion
         //Matriz feromonas y heuristica
         double feromona[][] = new double[n][n];
@@ -76,9 +87,6 @@ public class SCH {
             }
         }
 
-        double mejorCosteActual, mejorCosteGlobal = 0;
-        Integer mejorHormigaActual[] = null;
-
         //Carga inicial de feromona y de la heuristica
         double ferInicio = greedy;
         for (int i = 0; i < n; i++) {
@@ -92,7 +100,7 @@ public class SCH {
 
         int iteracion = 0;
 
-        double tiempo = 0; //@TODO EL TIEMPO NO LO HACE
+        double tiempo = 0; //@TODO EL TIEMPO NO ESTA HECHO
         while (iteracion < numIteraciones && tiempo < 600000) {
 
             //Carga de las hormigas iniciales
@@ -145,16 +153,16 @@ public class SCH {
                     }
 
                     //Elegimos el elemento de la LRC que se añadira a la solucion 
-                    Double ferxHeu[] = new Double[LRC.size()];
+                    Double feromonasXheuristica[] = new Double[LRC.size()];
                     for (int i = 0; i < LRC.size(); i++) {
-                        ferxHeu[i] = 0.0;
+                        feromonasXheuristica[i] = 0.0;
                     }
 
                     //Cantidad total de feromona*heuristica por cada elemento de la LRC 
                     //respecto de los elementos de la solución
                     for (int i = 0; i < LRC.size(); i++) {
                         for (int j = 0; j < elemento; j++) {
-                            ferxHeu[i] += Math.pow(heuristica[j][LRC.get(i)], beta) * Math.pow(feromona[j][LRC.get(i)], alfa);
+                            feromonasXheuristica[i] += Math.pow(heuristica[j][LRC.get(i)], beta) * Math.pow(feromona[j][LRC.get(i)], alfa);
                         }
                     }
 
@@ -164,9 +172,9 @@ public class SCH {
                     double argMax = 0.0;
                     int posArgMax = 0;
                     for (int i = 0; i < LRC.size(); i++) {
-                        denominador += ferxHeu[i];
-                        if (ferxHeu[i] > argMax) {
-                            argMax = ferxHeu[i];
+                        denominador += feromonasXheuristica[i];
+                        if (feromonasXheuristica[i] > argMax) {
+                            argMax = feromonasXheuristica[i];
                             posArgMax = LRC.get(i);
                         }
                     }
@@ -174,8 +182,8 @@ public class SCH {
                     //Transicion
                     //Vector de probabilidades de transicion
                     int elegido = 0;
-                    Double prob[] = new Double[LRC.size()];
-                    for (Double ele : prob) {
+                    Double probabilidades[] = new Double[LRC.size()];
+                    for (Double ele : probabilidades) {
                         ele = 0.0;
                     }
                     double q = aleatorio.Randfloat(0, (float) 1.01);
@@ -184,15 +192,15 @@ public class SCH {
                         elegido = posArgMax;
                     } else {  //Se aplica la transicion normal
                         for (int i = 0; i < LRC.size(); i++) {
-                            double numerador = ferxHeu[i];
-                            prob[i] = numerador / denominador;
+                            double numerador = feromonasXheuristica[i];
+                            probabilidades[i] = numerador / denominador;
                         }
 
                         //Elegimos el nuevo elemento en base a las probabilidades                                      
                         double Uniforme = aleatorio.Randfloat(0, (float) 1.0);  //Aleatorio uniforme
                         double acumulado = 0.0; //Acumulado
                         for (int i = 0; i < LRC.size(); i++) {
-                            acumulado += prob[i];
+                            acumulado += probabilidades[i];
                             if (Uniforme <= acumulado) { //Si el acumulado sobrepasa al uniforme, elegimos al primero que sume por encima
                                 elegido = LRC.get(i);
                                 break; //Y salimos con el elemento
@@ -206,7 +214,6 @@ public class SCH {
 
                     //Limpiamos la LRC
                     LRC.clear();
-
                 }
 
                 //Aqui ya habriamos añadido una componente a cada hormiga
@@ -237,8 +244,8 @@ public class SCH {
             }
 
             //Demonio
-            demonio(feromona, mejorSolucion, mejorCosteActual);
-            
+            demonio(feromona);
+
             //Reiniciamos las hormigas
             for (int i = 0; i < poblacion; i++) {
                 for (int j = 0; j < m; j++) {
@@ -270,7 +277,7 @@ public class SCH {
         return coste;
     }
 
-    private void demonio(double feromona[][], Integer mejorSolucion[], double mejorCosteActual) {
+    private void demonio(double feromona[][]) {
         //Actualizacion de la feromona global (solo afecta a los elemnentos de la mejor solucion)        
         double deltaMejor = mejorCosteActual; //Delta maximizada (coste la mejor solucion)
         for (int i = 0; i < m; i++) {
