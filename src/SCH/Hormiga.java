@@ -5,7 +5,6 @@
  */
 package SCH;
 
-import java.util.Vector;
 import tools.CargaDatos;
 import tools.Random;
 
@@ -53,7 +52,7 @@ public class Hormiga {
 
     public void inicializar() {
         for (int i = 0; i < datos.getTamSolucion(); i++) {
-            sol[i] = -1;
+            sol[i] = 0;
         }
         for (int i = 0; i < datos.getTamMatriz(); i++) {
             marcados[i] = false;
@@ -88,6 +87,10 @@ public class Hormiga {
 
     public Integer[] getSol() {
         return sol;
+    }
+
+    void reiniciar() {
+        
     }
 
 }

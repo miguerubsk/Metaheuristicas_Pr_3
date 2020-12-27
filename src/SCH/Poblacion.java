@@ -58,8 +58,9 @@ public class Poblacion {
     }
 
     void reiniciar() {
-        tamPoblacion = 0;
-        generarPoblacion();
+        for (Hormiga hormiga : poblacion) {
+            hormiga.reiniciar();
+        }
     }
 
 }

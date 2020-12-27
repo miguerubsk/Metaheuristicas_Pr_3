@@ -32,7 +32,7 @@ public class Metaheuristicas_Pr_3 {
             Datos.add(new CargaDatos(config.getFicheros().get(i)));
         }
         
-        SCH algoritmo = new SCH(Datos.get(0), config, (long)26522589, 19000);
+        SCH algoritmo = new SCH(Datos.get(1), config, (long)26522589, 19000);
         try {
             algoritmo.ejecutar();
         } catch (Exception ex) {

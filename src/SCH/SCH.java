@@ -25,9 +25,9 @@ public class SCH {
     private Poblacion poblacion;
     private double greedy;
     private double mejorCosteActual;
-    private Hormiga mejorHormigaActual;
+    private Integer mejorHormigaActual[];
     private double mejorCosteGlobal;
-    private Hormiga s;
+    private Integer s[];
 
     public SCH(CargaDatos data, Configurador conf, Long seed, double greedy) {
         this.datos = data;
@@ -38,6 +38,8 @@ public class SCH {
         this.heuristica = new double[datos.getTamMatriz()][datos.getTamMatriz()];
         this.LRC = new Vector<>();
         this.greedy = greedy;
+        this.mejorCosteActual = 0;
+        this.mejorCosteGlobal = 0;
 
         double fInicial = greedy;
         for (int i = 0; i < config.getTamPoblacion(); i++) {
@@ -56,10 +58,10 @@ public class SCH {
         int iteracion = 0;
         long tiempo = 0;
 
-        while (iteracion < config.getIteraciones() && tiempo < 600000) {
+        while (iteracion < 100 && tiempo < 600000) {
             long startTime = System.currentTimeMillis();
             poblacion.inicializar();
-//            System.out.println("SCH.SCH.ejecutar(): " + iteracion);
+            System.out.println("SCH.SCH.ejecutar(): " + iteracion);
 
             for (int comp = 1; comp < datos.getTamSolucion(); comp++) {
                 for (int h = 0; h < poblacion.getTamPoblacion(); h++) {
@@ -130,6 +132,7 @@ public class SCH {
 
                     //FUNCION de TRANSICION
                     //vector de probabilidades de transicion
+//                    System.out.println("SCH.SCH.ejecutar(): LRC size " + LRC.size());
                     int elegido = 0;
                     Vector<Double> prob = new Vector<>(LRC.size());
                     for (int i = 0; i < LRC.size(); i++) {
@@ -149,7 +152,7 @@ public class SCH {
                         }
 
                         //elegimos la componente a añadir buscando en los intervalos de probabilidad                                        
-                        double Uniforme = aleatorio.Randfloat(0, 1);  //aleatorio para regla de transición
+                        double Uniforme = (double)aleatorio.Randfloat(0, 1);  //aleatorio para regla de transición
                         double acumulado = 0.0;
                         for (int i = 0; i < LRC.size(); i++) {
                             acumulado += prob.get(i);
@@ -181,7 +184,7 @@ public class SCH {
                 double coste = Coste(poblacion.getHormiga(i).getSol(), datos.getMatriz(), datos.getTamSolucion());
                 if (coste > mejorCosteActual) {
                     mejorCosteActual = coste;
-                    mejorHormigaActual = poblacion.getHormiga(i);
+                    mejorHormigaActual = poblacion.getHormiga(i).getSol().clone();
                 }
             }
 
@@ -193,9 +196,9 @@ public class SCH {
             double deltaMejor = mejorCosteActual;
             for (int i = 0; i < datos.getTamSolucion(); i++) {
                 for (int j = 0; j < datos.getTamMatriz(); j++) {
-                    if (s.getElementoSol(i) != j) {
-                        feromonas[s.getElementoSol(i)][j] += (0.1 * deltaMejor);
-                        feromonas[j][s.getElementoSol(i)] = feromonas[s.getElementoSol(i)][j];  //simetrica
+                    if (s[i] != j) {
+                        feromonas[s[i]][j] += (0.1 * deltaMejor);
+                        feromonas[j][s[i]] = feromonas[s[i]][j];  //simetrica
                     }
                 }
             }
@@ -211,16 +214,17 @@ public class SCH {
             }
 
             //LIMPIAMOS HORMIGAS
-            poblacion.reiniciar();
             iteracion++;
             long stopTime = System.currentTimeMillis();
             tiempo += stopTime - startTime;
         } //fin cuando las hormigas estan completas      
-        System.out.println("Iteraciones: "+iteracion+"\nTiempo: "+tiempo+"\n///////////////////////////////////////////////////////////////////////////////");
-
-        for (int i = 0; i < poblacion.getTamPoblacion(); i++) {
-            System.out.println("Hormiga " + i + ". Tamaño: " + datos.getTamSolucion() + "/" + poblacion.getHormiga(i).getSol().length + ". Solucion: " + poblacion.getHormiga(i).getSol().toString() + "\n");
+        System.out.println("Iteraciones: " + iteracion + "\nTiempo: " + tiempo + "\n///////////////////////////////////////////////////////////////////////////////");
+        Vector<Integer> aux = new Vector<>();
+        for (int i = 0; i < datos.getTamSolucion(); i++) {
+            aux.add(s[i]);
         }
+            
+        System.out.println("Mejor solucion actual: " + aux.toString() + ". Coste: " + Coste(s, datos.getMatriz(), datos.getTamSolucion()));
     }
 
     private double Coste(Integer s[], double dist[][], int m) {
