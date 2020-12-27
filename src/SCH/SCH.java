@@ -21,27 +21,19 @@ public class SCH {
     private Integer mejorHormigaActual[];
 
     //Parametros para el sistema
-    private int n;
-    private int m;
-    private int poblacion;
-    private double greedy;
-    private int numIteraciones;
-    private double delta;
-    private double q0;
-    private double fi;
-    private int beta;
-    private double alfa;
-    private double p;
+    private int n, m, poblacion, numIteraciones, beta;
+    private double greedy, p, alfa, fi, q0, delta;
+    String fichero;
 
     private Random aleatorio;
 
-    public SCH(double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
+    public SCH(String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
         this.matriz = matriz;
         this.mejorSolucion = null;
         this.mejorCosteActual = 0;
         this.mejorCosteGlobal = 0;
         this.mejorHormigaActual = null;
-
+        this.fichero = fichero;
         this.n = n;
         this.m = m;
         this.poblacion = poblacion;
@@ -102,7 +94,7 @@ public class SCH {
 
         double tiempo = 0; //@TODO EL TIEMPO NO ESTA HECHO
         while (iteracion < numIteraciones && tiempo < 600000) {
-
+            double start = System.currentTimeMillis();
             //Carga de las hormigas iniciales
             for (int i = 0; i < poblacion; i++) {
                 hormigas[i][0] = aleatorio.Randint(0, n - 1);
@@ -259,10 +251,16 @@ public class SCH {
             }
 
             iteracion++;
-
-            System.out.println("Iteracion: " + iteracion + " Coste mejor solucion actual: " + mejorCosteGlobal);
+            double stop = System.currentTimeMillis();
+            tiempo += stop - start;
+//            System.out.println("Iteracion: " + iteracion + " Coste mejor solucion actual: " + mejorCosteGlobal);
         }
-
+        System.out.println("\nFichero: " + fichero +
+                                "\nAlfa: " + alfa + 
+                                "\nBeta: " + beta + 
+                                "\nTiempo: " + tiempo + 
+                                "\nCoste: " + mejorCosteGlobal + 
+                                "\nSolucion: " + mejorSolucion.toString());
         System.out.println("Total Iteraciones:" + iteracion);
 
     }
