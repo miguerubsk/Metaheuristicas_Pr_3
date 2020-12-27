@@ -72,7 +72,7 @@ public class Configurador {
                     case "beta":
                         String[] vB = split[1].split(" ");
                         for (int i = 0; i < vB.length; i++) {
-                            alfa.add(Integer.parseInt(vB[i]));
+                            beta.add(Integer.parseInt(vB[i]));
                         }
                         break;
                     case "q0":
