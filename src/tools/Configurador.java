@@ -16,17 +16,19 @@ import java.util.ArrayList;
  */
 public class Configurador {
 
-    private ArrayList<String> Ficheros, tipoCruce;
+    private ArrayList<String> Ficheros;
     private ArrayList<Long> Semillas;
-    private ArrayList<Integer> Elite;
-    private Integer Evaluaciones, TamPoblacion;
-    private float Prob_Cruce, Prob_Mutacion;
+    private ArrayList<Integer> alfa, beta;
+    private ArrayList<Float> greedy, fInicial;
+    private Integer Iteraciones, TamPoblacion;
+    private float delta, fi, p, q0;
 
     public Configurador(String ruta) {
-        Ficheros = new ArrayList<>();
-        tipoCruce = new ArrayList<>();
-        Semillas = new ArrayList<>();
-        Elite = new ArrayList<>();
+        Ficheros = new ArrayList<String>();
+        Semillas = new ArrayList<Long>();
+        fInicial = new ArrayList<Float>();
+        this.alfa = new ArrayList<>();
+        this.beta = new ArrayList<>();
 
         String linea;
         FileReader f = null;
@@ -49,29 +51,41 @@ public class Configurador {
                             Semillas.add(Long.parseLong(vS[i]));
                         }
                         break;
-                    case "Cruce":
-                        String[] vA = split[1].split(" ");
-                        for (int i = 0; i < vA.length; i++) {
-                            tipoCruce.add(vA[i]);
-                        }
-                        break;
-                    case "Elite":
-                        String[] vE = split[1].split(" ");
-                        for (int i = 0; i < vE.length; i++) {
-                            Elite.add(Integer.parseInt(vE[i]));
-                        }
-                        break;
-                    case "Evaluaciones":
-                        Evaluaciones = Integer.parseInt(split[1]);
+                    case "Iteraciones":
+                        Iteraciones = Integer.parseInt(split[1]);
                         break;
                     case "Poblacion":
                         TamPoblacion = Integer.parseInt(split[1]);
                         break;
-                    case "Prob_Cruce":
-                        Prob_Cruce = Float.parseFloat(split[1]);
+                    case "greedy":
+                        String[] vG = split[1].split(" ");
+                        for (int i = 0; i < vG.length; i++) {
+                            fInicial.add(Float.parseFloat(vG[i]));
+                        }
                         break;
-                    case "Prob_Mutacion":
-                        Prob_Mutacion = Float.parseFloat(split[1]);
+                    case "alfa":
+                        String[] vA = split[1].split(" ");
+                        for (int i = 0; i < vA.length; i++) {
+                            alfa.add(Integer.parseInt(vA[i]));
+                        }
+                        break;
+                    case "beta":
+                        String[] vB = split[1].split(" ");
+                        for (int i = 0; i < vB.length; i++) {
+                            beta.add(Integer.parseInt(vB[i]));
+                        }
+                        break;
+                    case "q0":
+                        q0 = Float.parseFloat(split[1]);
+                        break;
+                    case "p":
+                        p = Float.parseFloat(split[1]);
+                        break;
+                    case "fi":
+                        fi = Float.parseFloat(split[1]);
+                        break;
+                    case "delta":
+                        delta = Float.parseFloat(split[1]);
                         break;
                 }
             }
@@ -85,32 +99,48 @@ public class Configurador {
         return Ficheros;
     }
 
-    public ArrayList<String> getTipoCruce() {
-        return tipoCruce;
-    }
-
     public ArrayList<Long> getSemillas() {
         return Semillas;
     }
 
-    public Integer getEvaluaciones() {
-        return Evaluaciones;
+    public Integer getIteraciones() {
+        return Iteraciones;
     }
 
     public int getTamPoblacion() {
         return TamPoblacion;
     }
 
-    public ArrayList<Integer> getElite() {
-        return Elite;
+    public float getDelta() {
+        return delta;
     }
 
-    public float getProb_Cruce() {
-        return Prob_Cruce;
+    public float getFi() {
+        return fi;
     }
 
-    public float getProb_Mutacion() {
-        return Prob_Mutacion;
+    public float getP() {
+        return p;
+    }
+
+    public float getQ0() {
+        return q0;
+    }
+
+    public ArrayList<Float> getGreedy() {
+        return greedy;
+    }
+
+    public ArrayList<Integer> getAlfa() {
+        return alfa;
+    }
+
+    public ArrayList<Integer> getBeta() {
+        return beta;
+    }
+
+    public ArrayList<Float> getfInicial() {
+        return fInicial;
     }
 
 }
