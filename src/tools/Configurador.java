@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -19,14 +20,14 @@ public class Configurador {
     private ArrayList<String> Ficheros;
     private ArrayList<Long> Semillas;
     private ArrayList<Integer> alfa, beta;
-    private ArrayList<Float> greedy, fInicial;
+    private HashMap<String, double> fInicial;
     private Integer Iteraciones, TamPoblacion;
     private float delta, fi, p, q0;
 
     public Configurador(String ruta) {
         Ficheros = new ArrayList<String>();
         Semillas = new ArrayList<Long>();
-        fInicial = new ArrayList<Float>();
+        fInicial = new HashMap<String, double>;
         this.alfa = new ArrayList<>();
         this.beta = new ArrayList<>();
 
@@ -60,7 +61,7 @@ public class Configurador {
                     case "greedy":
                         String[] vG = split[1].split(" ");
                         for (int i = 0; i < vG.length; i++) {
-                            fInicial.add(Float.parseFloat(vG[i]));
+                            fInicial.put(Ficheros.get(i),Double.parseDouble(vG[i]));
                         }
                         break;
                     case "alfa":
