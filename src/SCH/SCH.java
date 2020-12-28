@@ -105,7 +105,7 @@ public class SCH {
         int iteracion = 0;
 
         double tiempo = 0; //@TODO EL TIEMPO NO ESTA HECHO
-        while (iteracion < 100 && tiempo < 600000) {
+        while (iteracion < numIteraciones && tiempo < 600000) {
             double start = System.currentTimeMillis();
             //Carga de las hormigas iniciales
             for (int i = 0; i < poblacion; i++) {
