@@ -105,7 +105,7 @@ public class SCH {
         int iteracion = 0;
 
         double tiempo = 0; //@TODO EL TIEMPO NO ESTA HECHO
-        while (iteracion < numIteraciones && tiempo < 600000) {
+        while (iteracion < 100 && tiempo < 600000) {
             double start = System.currentTimeMillis();
             //Carga de las hormigas iniciales
             for (int i = 0; i < poblacion; i++) {
@@ -244,8 +244,7 @@ public class SCH {
             //Actualizamos si la nueva mejor hormiga de esta iteracion mejora la mejor de todas
             if (mejorCosteActual > mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteActual;
-                mejorSolucion = mejorHormigaActual;
-                Solucion = toString(mejorSolucion);
+                mejorSolucion = mejorHormigaActual.clone();
             }
 
             //Demonio
@@ -268,6 +267,7 @@ public class SCH {
             tiempo += stop - start;
 //            System.out.println("Iteracion: " + iteracion + " Coste mejor solucion actual: " + mejorCosteGlobal);
         }
+        Solucion = toString(mejorSolucion);
         System.out.println("\nFichero: " + fichero +
                                 "\nAlfa: " + alfa + 
                                 "\nBeta: " + beta + 
