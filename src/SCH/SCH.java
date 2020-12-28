@@ -7,6 +7,7 @@ package SCH;
 
 import java.util.Arrays;
 import java.util.Vector;
+import tools.GuardarLog;
 import tools.Random;
 
 /**
@@ -19,6 +20,7 @@ public class SCH {
     private Integer mejorSolucion[], mejorHormigaActual[];
     private double mejorCosteActual, mejorCosteGlobal;
     private String Solucion;
+    private final GuardarLog log;
 
     //Parametros para el sistema
     private int n, m, poblacion, numIteraciones, beta;
@@ -47,6 +49,16 @@ public class SCH {
         this.p = p;
         this.Solucion = "";
         this.aleatorio = new Random(semilla);
+        String ruta = "SCH-"+alfa+"-"+beta+"-"+fichero+"-"+semilla;
+        String info="[EJECUCION INICIADA]\n"
+                + "Archivo: " + fichero
+                + "\nSemilla: " + semilla
+                + "\nAlfa: " + alfa
+                + "\nBeta: " + beta
+                + "\nTamaño matriz: " + m
+                + "\nTamañoSolucion: " + n
+                + "\nTamañoPoblacion: " + poblacion;
+        this.log = new GuardarLog(ruta, info, "SCH-"+alfa+"-"+beta);
     }
 
     public void ejecutar() {
