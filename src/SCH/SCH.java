@@ -274,6 +274,12 @@ public class SCH {
                                 "\nTiempo: " + tiempo + 
                                 "\nCoste: " + mejorCosteGlobal + 
                                 "\nSolucion: " + Solucion);
+        log.escribirFinal("\nFichero: " + fichero +
+                                "\nAlfa: " + alfa + 
+                                "\nBeta: " + beta + 
+                                "\nTiempo: " + tiempo + 
+                                "\nCoste: " + mejorCosteGlobal + 
+                                "\nSolucion: " + Solucion);
         System.out.println("Total Iteraciones:" + iteracion);
 
     }
