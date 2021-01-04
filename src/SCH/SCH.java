@@ -5,7 +5,9 @@
  */
 package SCH;
 
+import java.util.Arrays;
 import java.util.Vector;
+import tools.GuardarLog;
 import tools.Random;
 
 /**
@@ -15,33 +17,25 @@ import tools.Random;
 public class SCH {
 
     private double matriz[][]; //Matriz de distancias
-    private Integer mejorSolucion[];
-    private double mejorCosteActual;
-    private double mejorCosteGlobal;
-    private Integer mejorHormigaActual[];
+    private Integer mejorSolucion[], mejorHormigaActual[];
+    private double mejorCosteActual, mejorCosteGlobal;
+    private String Solucion;
+    private final GuardarLog log;
 
     //Parametros para el sistema
-    private int n;
-    private int m;
-    private int poblacion;
-    private double greedy;
-    private int numIteraciones;
-    private double delta;
-    private double q0;
-    private double fi;
-    private int beta;
-    private double alfa;
-    private double p;
+    private int n, m, poblacion, numIteraciones, beta;
+    private double greedy, p, alfa, fi, q0, delta;
+    String fichero;
 
     private Random aleatorio;
 
-    public SCH(double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
+    public SCH(Long semilla, String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
         this.matriz = matriz;
         this.mejorSolucion = null;
         this.mejorCosteActual = 0;
         this.mejorCosteGlobal = 0;
         this.mejorHormigaActual = null;
-
+        this.fichero = fichero;
         this.n = n;
         this.m = m;
         this.poblacion = poblacion;
@@ -53,8 +47,18 @@ public class SCH {
         this.beta = beta;
         this.alfa = alfa;
         this.p = p;
-
-        this.aleatorio = new Random(26522589);
+        this.Solucion = "";
+        this.aleatorio = new Random(semilla);
+        String ruta = "SCH-"+alfa+"-"+beta+"-"+fichero+"-"+semilla;
+        String info="[EJECUCION INICIADA]\n"
+                + "Archivo: " + fichero
+                + "\nSemilla: " + semilla
+                + "\nAlfa: " + alfa
+                + "\nBeta: " + beta
+                + "\nTamaño matriz: " + n
+                + "\nTamañoSolucion: " + m
+                + "\nTamañoPoblacion: " + poblacion;
+        this.log = new GuardarLog(ruta, info, "SCH-"+alfa+"-"+beta);
     }
 
     public void ejecutar() {
@@ -102,7 +106,7 @@ public class SCH {
 
         double tiempo = 0; //@TODO EL TIEMPO NO ESTA HECHO
         while (iteracion < numIteraciones && tiempo < 600000) {
-
+            double start = System.currentTimeMillis();
             //Carga de las hormigas iniciales
             for (int i = 0; i < poblacion; i++) {
                 hormigas[i][0] = aleatorio.Randint(0, n - 1);
@@ -240,7 +244,7 @@ public class SCH {
             //Actualizamos si la nueva mejor hormiga de esta iteracion mejora la mejor de todas
             if (mejorCosteActual > mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteActual;
-                mejorSolucion = mejorHormigaActual;
+                mejorSolucion = mejorHormigaActual.clone();
             }
 
             //Demonio
@@ -259,10 +263,23 @@ public class SCH {
             }
 
             iteracion++;
-
-            System.out.println("Iteracion: " + iteracion + " Coste mejor solucion actual: " + mejorCosteGlobal);
+            double stop = System.currentTimeMillis();
+            tiempo += stop - start;
+//            System.out.println("Iteracion: " + iteracion + " Coste mejor solucion actual: " + mejorCosteGlobal);
         }
-
+        Solucion = toString(mejorSolucion);
+        System.out.println("\nFichero: " + fichero +
+                                "\nAlfa: " + alfa + 
+                                "\nBeta: " + beta + 
+                                "\nTiempo: " + tiempo + 
+                                "\nCoste: " + mejorCosteGlobal + 
+                                "\nSolucion: " + Solucion);
+        log.escribirFinal("\nFichero: " + fichero +
+                                "\nAlfa: " + alfa + 
+                                "\nBeta: " + beta + 
+                                "\nTiempo: " + tiempo + 
+                                "\nCoste: " + mejorCosteGlobal + 
+                                "\nSolucion: " + Solucion);
         System.out.println("Total Iteraciones:" + iteracion);
 
     }
@@ -297,5 +314,16 @@ public class SCH {
                 }
             }
         }
+    }
+    private String toString(Integer sol[]){
+        String aux = "[";
+        Arrays.sort(sol);
+        for(int i = 0; i < sol.length; i++){
+            aux += sol[i];
+            if(i < sol.length -1)
+                aux += ",";
+        }
+        aux += "]";
+        return aux;
     }
 }

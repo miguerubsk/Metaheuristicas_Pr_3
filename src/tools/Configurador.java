@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -17,16 +18,16 @@ import java.util.ArrayList;
 public class Configurador {
 
     private ArrayList<String> Ficheros;
-    private ArrayList<Long> Semillas;
+    private Long Semilla;
     private ArrayList<Integer> alfa, beta;
-    private ArrayList<Float> greedy, fInicial;
+    private HashMap<String, Double> fInicial;
     private Integer Iteraciones, TamPoblacion;
     private float delta, fi, p, q0;
 
     public Configurador(String ruta) {
         Ficheros = new ArrayList<String>();
-        Semillas = new ArrayList<Long>();
-        fInicial = new ArrayList<Float>();
+        Semilla = null;
+        fInicial = new HashMap<String, Double>();
         this.alfa = new ArrayList<>();
         this.beta = new ArrayList<>();
 
@@ -46,10 +47,9 @@ public class Configurador {
                         }
                         break;
                     case "Semillas":
-                        String[] vS = split[1].split(" ");
-                        for (int i = 0; i < vS.length; i++) {
-                            Semillas.add(Long.parseLong(vS[i]));
-                        }
+
+                        Semilla = Long.parseLong(split[1]);
+
                         break;
                     case "Iteraciones":
                         Iteraciones = Integer.parseInt(split[1]);
@@ -60,7 +60,7 @@ public class Configurador {
                     case "greedy":
                         String[] vG = split[1].split(" ");
                         for (int i = 0; i < vG.length; i++) {
-                            fInicial.add(Float.parseFloat(vG[i]));
+                            fInicial.put(Ficheros.get(i), Double.parseDouble(vG[i]));
                         }
                         break;
                     case "alfa":
@@ -99,8 +99,8 @@ public class Configurador {
         return Ficheros;
     }
 
-    public ArrayList<Long> getSemillas() {
-        return Semillas;
+    public Long getSemilla() {
+        return Semilla;
     }
 
     public Integer getIteraciones() {
@@ -127,10 +127,6 @@ public class Configurador {
         return q0;
     }
 
-    public ArrayList<Float> getGreedy() {
-        return greedy;
-    }
-
     public ArrayList<Integer> getAlfa() {
         return alfa;
     }
@@ -139,7 +135,7 @@ public class Configurador {
         return beta;
     }
 
-    public ArrayList<Float> getfInicial() {
+    public HashMap<String, Double> getfInicial() {
         return fInicial;
     }
 
