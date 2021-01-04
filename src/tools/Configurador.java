@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class Configurador {
 
     private ArrayList<String> Ficheros;
-    private ArrayList<Long> Semillas;
+    private Long Semilla;
     private ArrayList<Integer> alfa, beta;
     private HashMap<String, Double> fInicial;
     private Integer Iteraciones, TamPoblacion;
@@ -26,7 +26,7 @@ public class Configurador {
 
     public Configurador(String ruta) {
         Ficheros = new ArrayList<String>();
-        Semillas = new ArrayList<Long>();
+        Semilla = null;
         fInicial = new HashMap<String, Double>();
         this.alfa = new ArrayList<>();
         this.beta = new ArrayList<>();
@@ -47,10 +47,9 @@ public class Configurador {
                         }
                         break;
                     case "Semillas":
-                        String[] vS = split[1].split(" ");
-                        for (int i = 0; i < vS.length; i++) {
-                            Semillas.add(Long.parseLong(vS[i]));
-                        }
+
+                        Semilla = Long.parseLong(split[1]);
+
                         break;
                     case "Iteraciones":
                         Iteraciones = Integer.parseInt(split[1]);
@@ -61,7 +60,7 @@ public class Configurador {
                     case "greedy":
                         String[] vG = split[1].split(" ");
                         for (int i = 0; i < vG.length; i++) {
-                            fInicial.put(Ficheros.get(i),Double.parseDouble(vG[i]));
+                            fInicial.put(Ficheros.get(i), Double.parseDouble(vG[i]));
                         }
                         break;
                     case "alfa":
@@ -100,8 +99,8 @@ public class Configurador {
         return Ficheros;
     }
 
-    public ArrayList<Long> getSemillas() {
-        return Semillas;
+    public Long getSemilla() {
+        return Semilla;
     }
 
     public Integer getIteraciones() {
