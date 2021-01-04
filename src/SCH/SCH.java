@@ -55,8 +55,8 @@ public class SCH {
                 + "\nSemilla: " + semilla
                 + "\nAlfa: " + alfa
                 + "\nBeta: " + beta
-                + "\nTamaño matriz: " + m
-                + "\nTamañoSolucion: " + n
+                + "\nTamaño matriz: " + n
+                + "\nTamañoSolucion: " + m
                 + "\nTamañoPoblacion: " + poblacion;
         this.log = new GuardarLog(ruta, info, "SCH-"+alfa+"-"+beta);
     }
