@@ -51,8 +51,8 @@ public class SCH {
         this.p = p;
         this.Solucion = "";
         this.aleatorio = new Random(semilla);
-        String ruta = "SCH-"+alfa+"-"+beta+"-"+fichero+"-"+semilla;
-        String info="[EJECUCION INICIADA]\n"
+        String ruta = "SCH-" + alfa + "-" + beta + "-" + fichero + "-" + semilla;
+        String info = "[EJECUCION INICIADA]\n"
                 + "Archivo: " + fichero
                 + "\nSemilla: " + semilla
                 + "\nAlfa: " + alfa
@@ -60,10 +60,12 @@ public class SCH {
                 + "\nTamaño matriz: " + n
                 + "\nTamañoSolucion: " + m
                 + "\nTamañoPoblacion: " + poblacion;
-        this.log = new GuardarLog(ruta, info, "SCH-"+alfa+"-"+beta);
+        System.out.println(info);
+        this.log = new GuardarLog(ruta, info, "SCH-" + alfa + "-" + beta);
     }
 
     public void ejecutar() {
+
         //Declaracion de vectores e inicializacion
         //Matriz feromonas y heuristica
         double feromona[][] = new double[n][n];
@@ -269,19 +271,21 @@ public class SCH {
 //            System.out.println("Iteracion: " + iteracion + " Coste mejor solucion actual: " + mejorCosteGlobal);
         }
         Solucion = toString(mejorSolucion);
-        System.out.println("\nFichero: " + fichero +
-                                "\nAlfa: " + alfa + 
-                                "\nBeta: " + beta + 
-                                "\nTiempo: " + tiempo + 
-                                "\nCoste: " + mejorCosteGlobal + 
-                                "\nSolucion: " + Solucion);
-        log.escribirFinal("\nFichero: " + fichero +
-                                "\nAlfa: " + alfa + 
-                                "\nBeta: " + beta + 
-                                "\nTiempo: " + tiempo + 
-                                "\nCoste: " + mejorCosteGlobal + 
-                                "\nSolucion: " + Solucion);
-        System.out.println("Total Iteraciones:" + iteracion);
+        System.out.println("\n[EJECUCION TERMINADA]\n"
+                + "Fichero: " + fichero
+                + "\nAlfa: " + alfa
+                + "\nBeta: " + beta
+                + "\nTiempo: " + tiempo
+                + "\nCoste: " + mejorCosteGlobal
+                + "\nSolucion: " + Solucion);
+        log.escribirFinal("\n[EJECUCION TERMINADA]\n"
+                + "Fichero: " + fichero
+                + "\nAlfa: " + alfa
+                + "\nBeta: " + beta
+                + "\nTiempo: " + tiempo
+                + "\nCoste: " + mejorCosteGlobal
+                + "\nSolucion: " + Solucion);
+        System.out.println("Total Iteraciones: " + iteracion);
 
     }
 
@@ -316,13 +320,15 @@ public class SCH {
             }
         }
     }
-    private String toString(Integer sol[]){
+
+    private String toString(Integer sol[]) {
         String aux = "[";
         Arrays.sort(sol);
-        for(int i = 0; i < sol.length; i++){
+        for (int i = 0; i < sol.length; i++) {
             aux += sol[i];
-            if(i < sol.length -1)
+            if (i < sol.length - 1) {
                 aux += ",";
+            }
         }
         aux += "]";
         return aux;
