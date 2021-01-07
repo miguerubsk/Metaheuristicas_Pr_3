@@ -176,7 +176,7 @@ public class SCH {
                             feromonasXheuristica[i] += Math.pow(heuristica[j][LRC.get(i)], beta) * Math.pow(feromona[j][LRC.get(i)], alfa);
                         }
                     }
-                    log.escribirNoInfo("\n\nFeromone*Heurística: " + toString(feromonasXheuristica));
+                    log.escribirNoInfo("\n\nFeromona*Heurística: " + toString(feromonasXheuristica));
 
                     //calculo del argMax y sumatoria del total de feromonaxHeuristica
                     //(denominador)
