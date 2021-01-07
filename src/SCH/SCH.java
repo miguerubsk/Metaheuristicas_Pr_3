@@ -24,12 +24,13 @@ public class SCH {
 
     //Parametros para el sistema
     private int n, m, poblacion, numIteraciones, beta;
+    private long tiempoMax;
     private double greedy, p, alfa, fi, q0, delta;
     String fichero;
 
     private Random aleatorio;
 
-    public SCH(Long semilla, String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
+    public SCH(Long semilla, String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta, long time) {
         this.matriz = matriz;
         this.mejorSolucion = null;
         this.mejorCosteActual = 0;
@@ -37,6 +38,7 @@ public class SCH {
         this.mejorHormigaActual = null;
         this.fichero = fichero;
         this.n = n;
+        this.tiempoMax = time;
         this.m = m;
         this.poblacion = poblacion;
         this.greedy = greedy;
@@ -54,13 +56,15 @@ public class SCH {
                 + "Archivo: " + fichero
                 + "\nAlfa: " + alfa
                 + "\nBeta: " + beta
-                + "\nTamaño matriz: " + m
-                + "\nTamañoSolucion: " + n
+                + "\nTamaño matriz: " + n
+                + "\nTamañoSolucion: " + m
                 + "\nTamañoPoblacion: " + poblacion;
-        this.log = new GuardarLog(ruta, info, "SCH-"+alfa+"-"+beta);
+        System.out.println(info);
+        this.log = new GuardarLog(ruta, info, "SCH-" + alfa + "-" + beta);
     }
 
     public void ejecutar() {
+
         //Declaracion de vectores e inicializacion
         //Matriz feromonas y heuristica
         double feromona[][] = new double[n][n];
@@ -102,15 +106,9 @@ public class SCH {
         }
 
         int iteracion = 0;
-<<<<<<< Updated upstream
-
-        double tiempo = 0; //@TODO EL TIEMPO NO ESTA HECHO
-        while (iteracion < numIteraciones && tiempo < 600000) {
-=======
         double tiempo = 0;
         while (iteracion < numIteraciones && tiempo < tiempoMax) {
             log.escribir("----------------------------------------------------------------------------------------------------------------\n\n\nNUMERO DE ITERACION: " + iteracion);
->>>>>>> Stashed changes
             double start = System.currentTimeMillis();
             //Carga de las hormigas iniciales
             for (int i = 0; i < poblacion; i++) {
@@ -340,10 +338,11 @@ public class SCH {
     private String toStringSol(Integer sol[]){
         String aux = "[";
         Arrays.sort(sol);
-        for(int i = 0; i < sol.length; i++){
+        for (int i = 0; i < sol.length; i++) {
             aux += sol[i];
-            if(i < sol.length -1)
+            if (i < sol.length - 1) {
                 aux += ",";
+            }
         }
         aux += "]";
         return aux;
