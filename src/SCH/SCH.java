@@ -137,7 +137,7 @@ public class SCH {
                             distancias[i] = d;
                         }
                     }
-                    log.escribirNoInfo("\n\nElementos candidatos: "+toString(distancias));
+                    log.escribirNoInfo("\n\nDistancias de los elementos candidatos: "+toString(distancias));
 
                     //Calculamos la distancia minima y maxima para la LRC
                     double mayorDist = 0;
@@ -159,9 +159,9 @@ public class SCH {
                     for (int i = 0; i < n; i++) {
                         if (!(marcados[hormiga][i]) && (distancias[i] >= (menorDist + (delta * (mayorDist - menorDist))))) {
                             LRC.add(i);
-                            log.escribirNoInfo("LRC: " + LRC.toString());
                         }
                     }
+                    log.escribirNoInfo("LRC: " + LRC.toString());
 
                     //Elegimos el elemento de la LRC que se añadira a la solucion 
                     Double feromonasXheuristica[] = new Double[LRC.size()];
@@ -237,9 +237,9 @@ public class SCH {
                 for (int h = 0; h < poblacion; h++) {
                     for (int i = 0; i < elemento; i++) {
                         feromona[hormigas[h][i]][hormigas[h][elemento]] = ((1 - fi) * feromona[hormigas[h][i]][hormigas[h][elemento]]) + (fi * ferInicio);
-                        log.escribirNoInfo("Matriz de feromona actualizada:\n"+toString(feromona));
                     }
                 }
+//                log.escribirNoInfo("Matriz de feromona actualizada:\n"+toString(feromona));
 
             }
 
@@ -323,7 +323,7 @@ public class SCH {
                 }
             }
         }
-        log.escribir("Matriz de fermonas tras actualizar con el demonio:\n"+toString(feromona));
+//        log.escribir("Matriz de fermonas tras actualizar con el demonio:\n"+toString(feromona));
 
         //Evaporacion
         for (int i = 0; i < n; i++) {
@@ -333,7 +333,7 @@ public class SCH {
                 }
             }
         }
-        log.escribir("Matriz de feromonas tras evaporar con el demonio:\n"+toString(feromona));
+//        log.escribir("Matriz de feromonas tras evaporar con el demonio:\n"+toString(feromona));
     }
     private String toStringSol(Integer sol[]){
         String aux = "[";
@@ -341,7 +341,7 @@ public class SCH {
         for (int i = 0; i < sol.length; i++) {
             aux += sol[i];
             if (i < sol.length - 1) {
-                aux += ",";
+                aux += ", ";
             }
         }
         aux += "]";
@@ -353,7 +353,7 @@ public class SCH {
         for(int i = 0; i < sol.length; i++){
             aux += sol[i];
             if(i < sol.length -1)
-                aux += ",";
+                aux += ", ";
         }
         aux += "]";
         return aux;
@@ -365,31 +365,37 @@ public class SCH {
         for(int i = 0; i < vec.length; i++){
             aux += vec[i];
             if(i < vec.length -1)
-                aux += ",";
+                aux += ", ";
         }
         aux += "]";
         return aux;
     }
     
     private String toString(double mat[][]){
-        String aux ="";
+        String aux ="[";
         for(int i = 0; i < mat.length; i++){
             for(int j = 0; j < mat[i].length; j++){
                 aux+=mat[i][j];
+                if(j < mat[i].length -1)
+                aux += ", ";
             }
             aux+="\n";
         }
+        aux +="]";
         return aux;
     }
     
     private String toString(int mat[][]){
-        String aux ="";
+        String aux ="[";
         for(int i = 0; i < mat.length; i++){
             for(int j = 0; j < mat[i].length; j++){
                 aux+=mat[i][j];
+                if(j < mat[i].length -1)
+                aux += ", ";
             }
             aux+="\n";
         }
+        aux +="]";
         return aux;
     }
 }
