@@ -24,12 +24,12 @@ public class SCH {
 
     //Parametros para el sistema
     private int n, m, poblacion, numIteraciones, beta;
-    private double greedy, p, alfa, fi, q0, delta;
+    private double greedy, p, alfa, fi, q0, delta, tiempoMax;
     String fichero;
 
     private Random aleatorio;
 
-    public SCH(Long semilla, String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta) {
+    public SCH(Long semilla, String fichero, double matriz[][], int n, int m, int iteraciones, int poblacion, double greedy, int alfa, int beta, double q0, double p, double fi, double delta, double tiempoMax) {
         this.matriz = matriz;
         this.mejorSolucion = null;
         this.mejorCosteActual = 0;
@@ -48,6 +48,7 @@ public class SCH {
         this.alfa = alfa;
         this.p = p;
         this.Solucion = "";
+        this.tiempoMax = tiempoMax;
         this.aleatorio = new Random(semilla);
         String ruta = "SCH-"+alfa+"-"+beta+"-"+fichero+"-"+semilla;
         String info="[EJECUCION INICIADA]\n"
@@ -105,7 +106,7 @@ public class SCH {
         int iteracion = 0;
 
         double tiempo = 0; //@TODO EL TIEMPO NO ESTA HECHO
-        while (iteracion < numIteraciones && tiempo < 600000) {
+        while (iteracion < numIteraciones && tiempo < tiempoMax) {
             double start = System.currentTimeMillis();
             //Carga de las hormigas iniciales
             for (int i = 0; i < poblacion; i++) {
