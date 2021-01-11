@@ -51,8 +51,8 @@ public class SCH {
         this.p = p;
         this.Solucion = "";
         this.aleatorio = new Random(semilla);
-        String ruta = "SCH-"+alfa+"-"+beta+"-"+fichero;
-        String info="[EJECUCION INICIADA]\n"
+        String ruta = "SCH-" + alfa + "-" + beta + "-" + fichero;
+        String info = "[EJECUCION INICIADA]\n"
                 + "Archivo: " + fichero
                 + "\nAlfa: " + alfa
                 + "\nBeta: " + beta
@@ -137,7 +137,7 @@ public class SCH {
                             distancias[i] = d;
                         }
                     }
-                    log.escribirNoInfo("\n\nDistancias de los elementos candidatos: "+toString(distancias));
+                    log.escribirNoInfo("\n\nDistancias de los elementos candidatos: " + toString(distancias));
 
                     //Calculamos la distancia minima y maxima para la LRC
                     double mayorDist = 0;
@@ -214,19 +214,19 @@ public class SCH {
                         double acumulado = 0.0; //Acumulado
                         for (int i = 0; i < LRC.size(); i++) {
                             acumulado += probabilidades[i];
-                            log.escribirNoInfo("Probabilidad acumulada: " + acumulado);
                             if (Uniforme <= acumulado) { //Si el acumulado sobrepasa al uniforme, elegimos al primero que sume por encima
                                 elegido = LRC.get(i);
                                 log.escribirNoInfo("Elemento elegido: " + elegido);
                                 break; //Y salimos con el elemento
                             }
                         }
+                        log.escribirNoInfo("Probabilidad acumulada: " + acumulado);
                     }
 
                     //Añadimos el elemento nuevo de la solucion
                     hormigas[hormiga][elemento] = elegido;
                     marcados[hormiga][elegido] = true;
-                    log.escribirNoInfo("\n\nHormiga["+ hormiga +"]: "+toString(hormigas[hormiga]));
+                    log.escribirNoInfo("\n\nHormiga[" + hormiga + "]: " + toString(hormigas[hormiga]));
 
                     //Limpiamos la LRC
                     LRC.clear();
@@ -260,7 +260,7 @@ public class SCH {
                 mejorCosteGlobal = mejorCosteActual;
                 mejorSolucion = mejorHormigaActual.clone();
             }
-            log.escribirNoInfo("\n\nMejor hormiga global: " + toStringSol(mejorSolucion)+"\nCoste: " + mejorCosteGlobal);
+            log.escribirNoInfo("\n\nMejor hormiga global: " + toStringSol(mejorSolucion) + "\nCoste: " + mejorCosteGlobal);
 
             //Demonio
             log.escribirNoInfo("\nAPLICANDO DEMONIO");
@@ -285,19 +285,19 @@ public class SCH {
 //            System.out.println("Iteracion: " + iteracion + " Coste mejor solucion actual: " + mejorCosteGlobal);
         }
         Solucion = toStringSol(mejorSolucion);
-        System.out.println("\nFichero: " + fichero +
-                                "\nAlfa: " + alfa + 
-                                "\nBeta: " + beta + 
-                                "\nTiempo: " + tiempo + 
-                                "\nCoste: " + mejorCosteGlobal + 
-                                "\nSolucion: " + Solucion);
-        log.escribirFinal("\nFichero: " + fichero +
-                                "\nAlfa: " + alfa + 
-                                "\nBeta: " + beta + 
-                                "\nTiempo: " + tiempo + 
-                                "\nCoste: " + mejorCosteGlobal + 
-                                "\nSolucion: " + Solucion+
-                                "\nIteraciones: " + iteracion);
+        System.out.println("\nFichero: " + fichero
+                + "\nAlfa: " + alfa
+                + "\nBeta: " + beta
+                + "\nTiempo: " + tiempo
+                + "\nCoste: " + mejorCosteGlobal
+                + "\nSolucion: " + Solucion);
+        log.escribirFinal("\nFichero: " + fichero
+                + "\nAlfa: " + alfa
+                + "\nBeta: " + beta
+                + "\nTiempo: " + tiempo
+                + "\nCoste: " + mejorCosteGlobal
+                + "\nSolucion: " + Solucion
+                + "\nIteraciones: " + iteracion);
         System.out.println("Total Iteraciones:" + iteracion);
 
     }
@@ -335,7 +335,8 @@ public class SCH {
         }
 //        log.escribir("Matriz de feromonas tras evaporar con el demonio:\n"+toString(feromona));
     }
-    private String toStringSol(Integer sol[]){
+
+    private String toStringSol(Integer sol[]) {
         String aux = "[";
         Arrays.sort(sol);
         for (int i = 0; i < sol.length; i++) {
@@ -347,55 +348,59 @@ public class SCH {
         aux += "]";
         return aux;
     }
-    
-    private String toString(Integer sol[]){
+
+    private String toString(Integer sol[]) {
         String aux = "[";
-        for(int i = 0; i < sol.length; i++){
+        for (int i = 0; i < sol.length; i++) {
             aux += sol[i];
-            if(i < sol.length -1)
+            if (i < sol.length - 1) {
                 aux += ", ";
+            }
         }
         aux += "]";
         return aux;
     }
-    
-    private String toString(Double vec[]){
+
+    private String toString(Double vec[]) {
         String aux = "[";
 //        Arrays.sort(vec);
-        for(int i = 0; i < vec.length; i++){
+        for (int i = 0; i < vec.length; i++) {
             aux += vec[i];
-            if(i < vec.length -1)
+            if (i < vec.length - 1) {
                 aux += ", ";
+            }
         }
         aux += "]";
         return aux;
     }
-    
-    private String toString(double mat[][]){
-        String aux ="[";
-        for(int i = 0; i < mat.length; i++){
-            for(int j = 0; j < mat[i].length; j++){
-                aux+=mat[i][j];
-                if(j < mat[i].length -1)
-                aux += ", ";
+
+    private String toString(double mat[][]) {
+        String aux = "[";
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                aux += mat[i][j];
+                if (j < mat[i].length - 1) {
+                    aux += ", ";
+                }
             }
-            aux+="\n";
+            aux += "\n";
         }
-        aux +="]";
+        aux += "]";
         return aux;
     }
-    
-    private String toString(int mat[][]){
-        String aux ="[";
-        for(int i = 0; i < mat.length; i++){
-            for(int j = 0; j < mat[i].length; j++){
-                aux+=mat[i][j];
-                if(j < mat[i].length -1)
-                aux += ", ";
+
+    private String toString(int mat[][]) {
+        String aux = "[";
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                aux += mat[i][j];
+                if (j < mat[i].length - 1) {
+                    aux += ", ";
+                }
             }
-            aux+="\n";
+            aux += "\n";
         }
-        aux +="]";
+        aux += "]";
         return aux;
     }
 }
