@@ -36,7 +36,7 @@ public class Metaheuristicas_Pr_3 {
             for (Integer alfa : config.getAlfa()) {
                 for (Integer beta : config.getBeta()) {
                     for (Long semilla : config.getSemillas()){
-                        SCH algoritmo = new SCH(semilla, Dato.getNombreFichero(), Dato.getMatriz(), Dato.getTamMatriz(), Dato.getTamSolucion(), config.getIteraciones(), config.getTamPoblacion(), config.getfInicial().get(Dato.getNombreFichero()), alfa, beta, config.getQ0(), config.getP(), config.getFi(), config.getDelta());
+                        SCH algoritmo = new SCH(semilla, Dato.getNombreFichero(), Dato.getMatriz(), Dato.getTamMatriz(), Dato.getTamSolucion(), config.getIteraciones(), config.getTamPoblacion(), config.getfInicial().get(Dato.getNombreFichero()), alfa, beta, config.getQ0(), config.getP(), config.getFi(), config.getDelta(), config.getTiempo());
                     try {
                         algoritmo.ejecutar();
                     } catch (Exception ex) {
