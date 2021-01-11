@@ -34,15 +34,22 @@ public class Metaheuristicas_Pr_3 {
 
         for (CargaDatos Dato : Datos) {
             for (Integer alfa : config.getAlfa()) {
-                for (Integer beta : config.getBeta()) {
-                    for (Long semilla : config.getSemillas()){
-                        SCH algoritmo = new SCH(semilla, Dato.getNombreFichero(), Dato.getMatriz(), Dato.getTamMatriz(), Dato.getTamSolucion(), config.getIteraciones(), config.getTamPoblacion(), config.getfInicial().get(Dato.getNombreFichero()), alfa, beta, config.getQ0(), config.getP(), config.getFi(), config.getDelta(), config.getTiempo());
+                if (alfa == 2) {
+                    SCH algoritmo = new SCH(config.getSemillas().get(0), Dato.getNombreFichero(), Dato.getMatriz(), Dato.getTamMatriz(), Dato.getTamSolucion(), config.getIteraciones(), config.getTamPoblacion(), config.getfInicial().get(Dato.getNombreFichero()), alfa, 1, config.getQ0(), config.getP(), config.getFi(), config.getDelta(), config.getTiempo());
                     try {
                         algoritmo.ejecutar();
                     } catch (Exception ex) {
                         Logger.getLogger(Metaheuristicas_Pr_3.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    }                    
+                } else {
+                    for (Integer beta : config.getBeta()) {
+                        SCH algoritmo = new SCH(config.getSemillas().get(0), Dato.getNombreFichero(), Dato.getMatriz(), Dato.getTamMatriz(), Dato.getTamSolucion(), config.getIteraciones(), config.getTamPoblacion(), config.getfInicial().get(Dato.getNombreFichero()), alfa, beta, config.getQ0(), config.getP(), config.getFi(), config.getDelta(), config.getTiempo());
+                        try {
+                            algoritmo.ejecutar();
+                        } catch (Exception ex) {
+                            Logger.getLogger(Metaheuristicas_Pr_3.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
             }
         }
