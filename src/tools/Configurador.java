@@ -23,6 +23,7 @@ public class Configurador {
     private HashMap<String, Double> fInicial;
     private Integer Iteraciones, TamPoblacion;
     private float delta, fi, p, q0;
+    private double tiempo;
 
     public Configurador(String ruta) {
         Ficheros = new ArrayList<String>();
@@ -88,6 +89,9 @@ public class Configurador {
                     case "delta":
                         delta = Float.parseFloat(split[1]);
                         break;
+                    case "tiempo":
+                        tiempo = Double.parseDouble(split[1]);
+                        break;
                 }
             }
 
@@ -138,6 +142,10 @@ public class Configurador {
 
     public HashMap<String, Double> getfInicial() {
         return fInicial;
+    }
+
+    public double getTiempo() {
+        return tiempo;
     }
 
 }
